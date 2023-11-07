@@ -1,0 +1,41 @@
+*****Clients :
+ID
+NOM String
+PRENOM String
+PHONE String
+EMAIL String
+PAYS String
+VILLE String
+RIB String
+CIN String (image)
+NOMBANQUE String
+
+***MANAGER
+ID
+NOM String
+PRENOM String
+PHONE String
+EMAIL String
+PAYS String
+VILLE String
+RIB String
+CIN String (image)
+NOMBANQUE String
+status Boolean (pending, accepting)
+
+****MISSION
+ID
+NOM
+PRIX
+DESCRIPTION
+LINK
+   
+
+***CATEGORIE
+ID
+NOM
+ICON
+
+*****LEVEL
+ID
+TYPELEVEL (level 1, level 2, level 3)
