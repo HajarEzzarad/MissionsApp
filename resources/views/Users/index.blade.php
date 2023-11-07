@@ -7,17 +7,6 @@
 
     <div>
         <div class="max-w-6xl mx-auto py-10 sm:px-6 lg:px-8">
-            
-            
-
-            <div class="block mb-8">
-                            <button class="inline-flex items-center px-4 py-2 bg-purple-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-purple-700 active:bg-purple-900 focus:outline-none focus:border-purple-900 focus:shadow-outline-purple disabled:opacity-25 transition ease-in-out duration-150">
-                            <a href="{{ route('users.create') }}">Add User</a>
-                            </button>
-                        </div>
-
-
-
             <div class="flex flex-col">
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
@@ -29,7 +18,10 @@
                                         ID
                                     </th>
                                     <th scope="col" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Name
+                                        Nom
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Prénom
                                     </th>
                                     <th scope="col" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Email
@@ -44,16 +36,13 @@
                                         Ville
                                     </th>
                                     <th scope="col" width="200" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Nationality
-                                    </th>
-                                    <th scope="col" width="200" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        CIN Scané
-                                    </th>
-                                    <th scope="col" width="200" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         RIB
                                     </th>
                                     <th scope="col" width="200" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-
+                                        Nom de Banque
+                                    </th>
+                                    <th scope="col" width="200" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                       
                                     </th>
                                     
                                 </tr>
@@ -66,7 +55,11 @@
                                         </td>
 
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                            {{ $user->name}}
+                                            {{ $user->nom}}
+                                        </td>
+
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            {{ $user->prenom}}
                                         </td>
 
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -74,20 +67,21 @@
                                         </td>
 
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                            
+                                            {{ $user->phone}}
                                         </td>
 
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                          
+                                        {{ $user->pays}}
                                         </td>
+
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                          
+                                            {{ $user->ville}}
+                                        </td>
+                                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                          {{ $user->RIB}}
                                           </td>
                                           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                          
-                                          </td>
-                                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                          
+                                          {{ $user->NomBanque}}
                                           </td>
                                           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                           

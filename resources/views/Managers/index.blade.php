@@ -22,14 +22,17 @@
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                            <table class="min-w-full divide-y divide-gray-200 w-full">
+                        <table class="min-w-full divide-y divide-gray-200 w-full">
                                 <thead>
                                 <tr>
                                     <th scope="col" width="50" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         ID
                                     </th>
                                     <th scope="col" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Name
+                                        Nom
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Prénom
                                     </th>
                                     <th scope="col" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Email
@@ -37,41 +40,67 @@
                                     <th scope="col" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Phone
                                     </th>
-                                    <th scope="col" width="200" class="px-6 py-3 bg-gray-50">
-
+                                    <th scope="col" width="200" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Pays
                                     </th>
-                                    <th scope="col" width="200" class="px-6 py-3 bg-gray-50">
-
+                                    <th scope="col" width="200" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Ville
+                                    </th>
+                                    <th scope="col" width="200" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        RIB
+                                    </th>
+                                    <th scope="col" width="200" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Nom de Banque
+                                    </th>
+                                    <th scope="col" width="200" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                       
                                     </th>
                                     
                                 </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
-                               @foreach ($users as $user)
+                               @foreach ($managers as $manager)
                                     <tr>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                           {{ $user->id}}
+                                           {{ $manager->id}}
                                         </td>
 
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                            {{ $user->name}}
+                                            {{ $manager->nom}}
                                         </td>
 
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                            {{ $user->email}}
+                                            {{ $manager->prenom}}
                                         </td>
 
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                            
+                                            {{ $manager->email}}
                                         </td>
 
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            {{ $manager->phone}}
+                                        </td>
+
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        {{ $manager->pays}}
+                                        </td>
+
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            {{ $manager->ville}}
+                                        </td>
+                                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                          {{ $manager->RIB}}
+                                          </td>
+                                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                          {{ $manager->NomBanque}}
+                                          </td>
+                                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                           
-</td>
+                                          </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                              <a href="{{ route('managers.show', $user->id) }}" class="text-blue-600 hover:text-blue-900 mb-2 mr-2">View</a>
-                                              <a href="{{ route('managers.update', $user->id) }}" class="text-indigo-600 hover:text-indigo-900 mb-2 mr-2">Edit</a>
-                                           <form class="inline-block" action="{{ route('managers.destroy', $user->id) }}" method="POST" onsubmit="return confirm('Are you sure?');">
+                                              <a href="{{ route('managers.show', $manager->id) }}" class="text-blue-600 hover:text-blue-900 mb-2 mr-2">View</a>
+                                              <a href="{{ route('managers.edit', $manager->id) }}" class="text-indigo-600 hover:text-indigo-900 mb-2 mr-2">Edit</a>
+                                           <form class="inline-block" action="{{ route('managers.destroy', $manager->id) }}" method="POST" onsubmit="return confirm('Are you sure?');">
                                                 <input type="hidden" name="_method" value="DELETE">
                                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                                 <input type="submit" class="text-red-600 hover:text-red-900 mb-2 mr-2" value="Delete">

@@ -2,16 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Manager;
 use Illuminate\Http\Request;
-use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Laravel\Jetstream\Jetstream;
+use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Str;
 
 class ManagersController extends Controller
 {
     public function index()
     {
-        $users = User::all();
+        $managers = Manager::all();
 
-        return view('managers.index', compact('users'));
+        return view('managers.index', compact('managers'));
     }
 
     public function create()
@@ -21,37 +25,45 @@ class ManagersController extends Controller
 
     public function store(Request $request)
     {
-        $user = new User;
-        $user->name = $request->input('name');
-        $user->email = $request->input('email');
-        $user->password = $request->input('password');
-        $user->save();
+        //generate a random password
+        $password = Str::random(6);
+      
+        $managers= Manager::create($request->all());
+        //upload CIN scané
+        $request->validate(['CIN_path'=>'required|image|mimes:jpeg,png,jpg|max:2048',]);
+        if($request->hasFile('CIN_path')){
+            $photoPath= $request->file('CIN_path')->store('CIN_PHOTOS','public');
+        }
 
+        //hash the genrerated password before storing it in the db;
+        $managers->password= Hash::make($password);
+        $managers->save();
+        
         return redirect()->route('managers.index');
     }
 
     public function show($id)
     {
-        $user= User::findOrFail($id);
-        return view('managers.show', compact('user'));
+        $managers= Manager::findOrFail($id);
+        return view('managers.show', compact('managers'));
     }
     public function edit($id)
     {
-        $user= User::findOrFail($id);
-        return view('managers.edit', compact('user'));
+        $managers= Manager::findOrFail($id);
+        return view('managers.edit', compact('managers'));
     }
     public function update(Request $request, $id)
     {
-        $user= User::findOrFail($id);
-        $user->update($request->all());
-    $user->save();
+        $managers= Manager::findOrFail($id);
+        $managers->update($request->all());
+    $managers->save();
     return redirect()->route('managers.index');
     }
 
     public function destroy($id)
     { 
-        $user= User::findOrFail($id);
-        $user->delete();
+        $managers= Manager::findOrFail($id);
+        $managers->delete();
         return redirect()->route('managers.index');
     }
 }
