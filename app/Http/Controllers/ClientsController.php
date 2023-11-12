@@ -40,6 +40,7 @@ class ClientsController extends Controller
         //generate a random password
          $passwordGenerate = Str::random(6);
         $clients = Client::find($id);
+        $clients->password= $passwordGenerate;
         $clients->approved = true;
         $clients->save();
         Mail::to($clients->email)->send(new AcceptingClient($clients,$passwordGenerate));

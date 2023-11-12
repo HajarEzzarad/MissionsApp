@@ -32,27 +32,31 @@ class ManagersController extends Controller
          
         //upload CIN scané
         $request->validate(['CIN_recto_path'=>'required|image|mimes:jpeg,png,jpg|max:2048',]);
-        if($request->hasFile('CIN_recto_path')){
-            $photoRECTO= $request->file('CIN_recto_path')->store('CIN_PHOTOS','public');
-        }
         $request->validate(['CIN_verso_path'=>'required|image|mimes:jpeg,png,jpg|max:2048',]);
-        if($request->hasFile('CIN_verso_path')){
-            $photoVERSO= $request->file('CIN_verso_path')->store('CIN_PHOTOS','public');
-        }
+
         //create manager
-        $managers= Manager::create([
-            'password'=> Hash::make($passwordGenerate),
-             'nom' =>$request->input('nom'),
-             'prenom' =>$request->input('prenom'),
-             'phone' =>$request->input('phone'),
-             'email' =>$request->input('email'),
-             'pays' =>$request->input('pays'),
-             'ville' =>$request->input('ville'),
-             'RIB' =>$request->input('RIB'),
-             'NomBanque' =>$request->input('NomBanque'),
-             'CIN_recto_path' => $photoRECTO,
-             'CIN_verso_path' => $photoVERSO,
-         ]);
+        $managers=new Manager;
+            $managers->password = $passwordGenerate;
+             $managers->nom =$request->input('nom');
+             $managers->prenom = $request->input('prenom');
+             $managers->phone =$request->input('phone');
+             $managers->email = $request->input('email');
+             $managers->pays = $request->input('pays');
+             $managers->ville = $request->input('ville');
+             $managers->RIB = $request->input('RIB');
+             $managers->NomBanque = $request->input('NomBanque');
+
+        if($request->hasFile('CIN_recto_path')){
+             $name= $request->file('CIN_recto_path')->getClientOriginalName();
+            $request->file('CIN_recto_path')->storeAs('public/CIN_photo', $name);
+            $managers->CIN_recto_path= $name;
+        }
+        
+        if($request->hasFile('CIN_verso_path')){
+            $name= $request->file('CIN_verso_path')->getClientOriginalName();
+            $request->file('CIN_verso_path')->storeAs('public/category_photo', $name);
+            $managers->CIN_verso_path= $name;
+        }
         $managers->save();
         Mail::to($managers->email)->send(new CreateManager($managers,$passwordGenerate));
         

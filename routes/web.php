@@ -35,7 +35,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::POST('categories/{category}/missions',[\App\Http\Controllers\MissiosnController::class,'store'])->name('store-mission');
     Route::get('/missions-show/{mission}', [\App\Http\Controllers\MissiosnController::class,'show'])->name('missions-show');
     Route::get('/missions-edit/{id}', [\App\Http\Controllers\MissiosnController::class,'edit'])->name('missions.edit');
-    Route::PUT('/missions-update/{mission}', [\App\Http\Controllers\MissiosnController::class,'update'])->name('missions.update');
+    Route::put('/missions/{id}', [\App\Http\Controllers\MissiosnController::class,'update'])->name('missions.update');
     Route::delete('/missions/{mission}', [\App\Http\Controllers\MissiosnController::class,'destroy'])->name('missions-destroy');
     //*********clients
     //CRUD clients

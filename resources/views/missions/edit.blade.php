@@ -7,6 +7,12 @@
 
     <div>
         <div class="max-w-4xl mx-auto py-10 sm:px-6 lg:px-8">
+        <div class="block mb-8">
+                <a href="{{ route('categories.show', $missions->categorie_id) }}" class="bg-purple-200 hover:bg-purple-300 text-black font-bold py-2 px-4 rounded">Back</a>
+            </div>
+             @if(session('message'))
+                <div class="bg-green-500 text-white p-4">{{ session('message')}}</div>
+                @endif
             <div class="mt-5 md:mt-0 md:col-span-2">
                 <form method="post" action="{{ route('missions.update', $missions->id) }}">
                     @csrf

@@ -41,9 +41,9 @@ class MissiosnController extends Controller
     $missions= Mission::find($id);
     return view('missions.edit', compact('missions'));
    }
-    public function update(Request $request, Mission $mission)
+    public function update(Request $request, $id)
     {
-        $missions= Mission::findOrFail($mission);
+        $missions= Mission::findOrFail($id);
         $missions->update($request->all());
         $missions->save();
         return redirect()->back()->with('message','Mission Edited successufully');

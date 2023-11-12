@@ -21,11 +21,9 @@
                          @endif
                         </div>
                         <div class="px-4 py-5 bg-white sm:p-6">
-                            <label for="icon_path" class="block font-medium text-sm text-gray-700">ICON</label>
-                            <input type="image" wire:model="photo" name="icon_path" id="icon_path" class="form-input rounded-md shadow-sm mt-1 block w-full"
-                                   value="{{ old('icon_path', $categories->icon_path) }}" src="{{ asset('storage/ICON_PHOTOS'.$categories->icon_path) }}"/>
-                                  
-                                   <button wire:click="uploadPhoto">upload Icon</button>
+                            <label for="icon_path" class="block font-medium text-sm text-gray-700">IMAGE</label>
+                            <input type="file" name="icon_path" id="icon_path" class="form-input rounded-md shadow-sm mt-1 block w-full" value="{{ $categories->icon_path}}" />
+                               
                                    @if ($errors->has('icon_path'))
                                 <p class="text-sm text-red-600">{{ $errors->first('icon_path') }}</p>
                          @endif

@@ -21,15 +21,20 @@ class CategoriesController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate(['icon_path'=>'required|image|mimes:jpeg,png,jpg|max:2048',]);
-        if($request->hasFile('icon_path')){
-            $icon= $request->file('icon_path')->store('ICON_PHOTOS','public');
-        }
-        //create category
-        $categories= Categorie::create([
-            'nom'=>$request->input('nom'),
-            'icon_path' => $icon,
+        $request->validate([
+            'icon_path'=>'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
+          //create category
+          $categories=new Categorie;
+          $categories->nom=$request->input('nom');
+        if($request->hasFile('icon_path')){
+            $name= $request->file('icon_path')->getClientOriginalName();
+            $request->file('icon_path')->storeAs('public/category_photo', $name);
+            $categories->icon_path= $name;
+          
+        }
+      
+       
         $categories->save();
 
         return redirect()->route('categories.index');

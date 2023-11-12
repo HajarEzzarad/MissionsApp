@@ -76,7 +76,7 @@
                                         CIN RECTO
                                     </th>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 bg-white divide-y divide-gray-200">
-                                      <img src="{{ asset('storage/CIN_PHOTOS'.$managers->CIN_recto_path) }}">
+                                    <img src="{{ asset('storage/CIN_photo/'.$managers->CIN_recto_path)}}" class="" alt="">
                                     </td>
                                 </tr>
                                 <tr class="border-b">
@@ -84,7 +84,7 @@
                                         CIN VERSO
                                     </th>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 bg-white divide-y divide-gray-200">
-                                      <img src="{{ asset('storage/CIN_PHOTOS'.$managers->CIN_verso_path) }}">
+                                    <img src="{{ asset('storage/CIN_photo/'.$managers->CIN_verso_path)}}" class="" alt="">
                                     </td>
                                 </tr>
                                 <tr class="border-b">

@@ -42,7 +42,7 @@
                                         ICON
                                     </th>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 bg-white divide-y divide-gray-200">
-                                      <img src="{{ asset('storage/ICON_PHOTOS'.$category->icon_path) }}">
+                                    <img src="{{ asset('storage/category_photo/'.$category->icon_path)}}" class="h-20 w-50" alt="">
                                     </td>
                                 </tr>
                                 
