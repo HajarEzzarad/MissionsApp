@@ -2,56 +2,57 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Categorie;
 use Illuminate\Http\Request;
-use App\Models\User;
+use App\Models\Mission;
 
 class MissiosnController extends Controller
 {
     public function index()
     {
-        $users = User::all();
-
-        return view('missions.index', compact('users'));
+        return view('categories.show');
     }
 
-    public function create()
+    public function create(Categorie $category)
     {
-        return view('missions.create');
+        return view('missions.create', compact('category'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request, Categorie $category)
     {
-        $user = new User;
-        $user->name = $request->input('name');
-        $user->email = $request->input('email');
-        $user->password = $request->input('password');
-        $user->save();
+        
+        $category->mission()->create([
+            'nom' =>$request->input('nom'),
+            'prix' =>$request->input('prix'),
+            'description' =>$request->input('description'),
+            'link' => $request->input('link'),
 
-        return redirect()->route('users.index');
+        ]);
+
+        return redirect()->back()->with('message','Mission Created Succefully');
     }
 
-    public function show($id)
+    public function show(Mission $mission)
     {
-        $user= User::findOrFail($id);
-        return view('users.show', compact('user'));
+        return view('missions.show', compact('mission'));
     }
     public function edit($id)
+   {
+    $missions= Mission::find($id);
+    return view('missions.edit', compact('missions'));
+   }
+    public function update(Request $request, Mission $mission)
     {
-        $user= User::findOrFail($id);
-        return view('users.edit', compact('user'));
-    }
-    public function update(Request $request, $id)
-    {
-        $user= User::findOrFail($id);
-        $user->update($request->all());
-    $user->save();
-    return redirect()->route('users.index');
+        $missions= Mission::findOrFail($mission);
+        $missions->update($request->all());
+        $missions->save();
+        return redirect()->back()->with('message','Mission Edited successufully');
     }
 
-    public function destroy($id)
+    public function destroy(Mission $mission)
     { 
-        $user= User::findOrFail($id);
-        $user->delete();
-        return redirect()->route('users.index');
+       
+        $mission->delete();
+        return redirect()->back()->with('message', 'the mission deleted!!');
     }
 }

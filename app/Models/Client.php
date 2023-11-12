@@ -34,7 +34,8 @@ class Client extends Authenticatable
         'phone',
         'pays',
         'ville',
-        'CIN_path',
+        'CIN_recto_path',
+        'CIN_verso_path',
         'RIB',
         'NomBanque',
     ];

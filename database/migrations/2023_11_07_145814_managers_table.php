@@ -19,7 +19,8 @@ return new class extends Migration
             $table->string('phone');
             $table->string('pays');
             $table->string('ville');
-            $table->string('CIN_path');
+            $table->string('CIN_recto_path');
+            $table->string('CIN_verso_path');
             $table->string('NomBanque');
             $table->string('RIB');
             $table->timestamp('email_verified_at')->nullable();

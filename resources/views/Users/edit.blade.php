@@ -67,13 +67,22 @@
                             @enderror
                         </div>
                         <div class="px-4 py-5 bg-white sm:p-6">
-                            <label for="CIN_path" class="block font-medium text-sm text-gray-700">CIN </label>
-                            <input type="CIN_path" name="CIN_path" id="CIN_path" class="form-input rounded-md shadow-sm mt-1 block w-full"
-                                   value="{{ old('CIN_path', $user->CIN_path) }}" />
-                          @error('CIN_path')
-                        
-                                <p class="text-sm text-red-600">{{ $message }}</p>
-                            @enderror
+                            <label for="CIN_recto_path" class="block font-medium text-sm text-gray-700">CIN RECTO</label>
+                            <input type="file" wire:model="photo" name="CIN_recto_path" id="CIN_recto_path" class="form-input rounded-md shadow-sm mt-1 block w-full"
+                                   value="{{ old('CIN_recto_path', $user->CIN_recto_path) }}" />
+                                   <button wire:click="uploadPhoto">upload CIN RECTO</button>
+                                   @if ($errors->has('CIN_recto_path'))
+                                <p class="text-sm text-red-600">{{ $errors->first('CIN_recto_path') }}</p>
+                         @endif
+                        </div>
+                        <div class="px-4 py-5 bg-white sm:p-6">
+                            <label for="CIN_verso_path" class="block font-medium text-sm text-gray-700">CIN VERSO</label>
+                            <input type="file" wire:model="photo" name="CIN_verso_path" id="CIN_verso_path" class="form-input rounded-md shadow-sm mt-1 block w-full"
+                                   value="{{ old('CIN_verso_path', $user->CIN_verso_path) }}" />
+                                   <button wire:click="uploadPhoto">upload CIN VERSO</button>
+                                   @if ($errors->has('CIN_verso_path'))
+                                <p class="text-sm text-red-600">{{ $errors->first('CIN_verso_path') }}</p>
+                         @endif
                         </div>
                         
                         <div class="px-4 py-5 bg-white sm:p-6">

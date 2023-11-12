@@ -17,6 +17,9 @@ return new class extends Migration
             $table->string('prix');
             $table->string('description');
             $table->string('link');
+            $table->foreignId('categorie_id')->constrained('categories')
+            ->onDelete('cascade');
+            $table->timestamps();
         });
     }
 
