@@ -40,20 +40,45 @@ class CategoriesController extends Controller
         return redirect()->route('categories.index');
     }
 
-    public function show(Categorie $category)
-    {
-        //showing the missions in this category
-        $missions = Mission::where('categorie_id', $category->id)->get();
-        //count the missions
-        $missionsCount = Mission::where('categorie_id', $category->id)->count();
-        //get the data of the category
-        $categories= Categorie::findOrFail($category->id);
-        return view('categories.show', [
+    public function show(Request $request, Categorie $category)
+{
+    //showing the missions in this category
+    $missions = Mission::where('categorie_id', $category->id)->get();
+
+    //count the missions
+    $missionsCount = Mission::where('categorie_id', $category->id)->count();
+
+    //get the data of the category
+    $categoryData = Categorie::findOrFail($category->id);
+
+    if ($request->expectsJson()) {
+        return response()->json([
+            'category' => [
+                'id' => $categoryData->id,
+                'name' => $categoryData->nom,
+                'icon' => $categoryData->icon_path,
+            ],
             'missions' => $missions,
-            'category' => $categories,
             'missionsCount' => $missionsCount,
         ]);
     }
+
+    return view('categories.show', [
+        'missions' => $missions,
+        'category' => $categoryData, // Corrected variable name
+        'missionsCount' => $missionsCount,
+    ]);
+}
+     public function fetchCategories(){
+        
+        $categories = Categorie::withCount('mission')->get();
+
+        // Assuming there is a 'missions_count' attribute in the response
+        $response = ['categories' => $categories];
+    
+        return response()->json($response);
+     }
+
     public function edit($id)
     {
         $categories= Categorie::findOrFail($id);
