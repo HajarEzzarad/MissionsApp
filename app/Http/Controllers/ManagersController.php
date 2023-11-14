@@ -66,4 +66,18 @@ class ManagersController extends Controller
         $managers->delete();
         return redirect()->route('managers.index');
     }
+    public function login(Request $request)
+{
+    $user = Manager::where('email', $request->email)->first();
+
+    if ($user && $request->password === $user->password) {
+        // Authentication successful
+        return response()->json([
+            'user' => $user,
+        ], 200);
+    } else {
+        return response()->json(['message' => 'Unauthorized'], 401);
+    }
+}
+
 }
