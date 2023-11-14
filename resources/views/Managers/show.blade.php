@@ -68,15 +68,23 @@
                                         Ville
                                     </th>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 bg-white divide-y divide-gray-200">
-                                      {{ $managers->Ville }}
+                                      {{ $managers->ville }}
                                     </td>
                                 </tr>
                                 <tr class="border-b">
                                     <th scope="col" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        CIN
+                                        CIN RECTO
                                     </th>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 bg-white divide-y divide-gray-200">
-                                      {{ $managers->CIN_path }}
+                                    <img src="{{ asset('storage/CIN_photo/'.$managers->CIN_recto_path)}}" class="" alt="">
+                                    </td>
+                                </tr>
+                                <tr class="border-b">
+                                    <th scope="col" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        CIN VERSO
+                                    </th>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 bg-white divide-y divide-gray-200">
+                                    <img src="{{ asset('storage/CIN_photo/'.$managers->CIN_verso_path)}}" class="" alt="">
                                     </td>
                                 </tr>
                                 <tr class="border-b">

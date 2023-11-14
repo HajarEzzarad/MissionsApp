@@ -4,9 +4,15 @@
             Users List
         </h2>
     </x-slot>
+    
 
     <div>
         <div class="max-w-6xl mx-auto py-10 sm:px-6 lg:px-8">
+        <div class="block mb-8">
+                            <button class="inline-flex items-center px-4 py-2 bg-red-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 active:bg-red-900 focus:outline-none focus:border-red-900 focus:shadow-outline-red disabled:opacity-25 transition ease-in-out duration-150">
+                            <a href="{{ route('unapproved-clients') }}">Clients Pending : {{ $unapprovedClientsCount}}</a>
+                            </button>
+                        </div>
             <div class="flex flex-col">
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
@@ -36,19 +42,13 @@
                                         Ville
                                     </th>
                                     <th scope="col" width="200" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        RIB
-                                    </th>
-                                    <th scope="col" width="200" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Nom de Banque
-                                    </th>
-                                    <th scope="col" width="200" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                        
                                     </th>
                                     
                                 </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
-                               @foreach ($users as $user)
+                               @foreach ($approvedClients as $user)
                                     <tr>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                            {{ $user->id}}
@@ -77,12 +77,6 @@
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                             {{ $user->ville}}
                                         </td>
-                                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                          {{ $user->RIB}}
-                                          </td>
-                                          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                          {{ $user->NomBanque}}
-                                          </td>
                                           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                           
                                           </td>

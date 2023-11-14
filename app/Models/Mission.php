@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Mission extends Model
 {
+    public $timestamps= false;
     public $table = 'missions';
     use HasFactory;
     protected $fillable = [
@@ -15,4 +16,8 @@ class Mission extends Model
         'description',
         'link',
     ];
+    public function category()
+    {
+        return $this->belongsTo(Categorie::class);
+    }
 }

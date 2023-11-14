@@ -19,12 +19,13 @@ return new class extends Migration
             $table->string('phone');
             $table->string('pays');
             $table->string('ville');
-            $table->string('CIN_path');
-            $table->string('NomBanque');
-            $table->string('RIB');
-            $table->boolean('approved')->default(0)->nuullable();
+            $table->string('CIN_recto_path')->nullable();
+            $table->string('CIN_verso_path')->nullable();
+            $table->string('NomBanque')->nullable();
+            $table->string('RIB')->nullable();
+            $table->boolean('approved')->default(0)->nullable();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->string('password')->nullable();
             $table->rememberToken();
             $table->foreignId('current_team_id')->nullable();
             $table->timestamps();

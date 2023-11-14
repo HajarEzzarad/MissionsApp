@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Hash;
 use Laravel\Jetstream\Jetstream;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Str;
+use App\Mail\CreateManager;
+use Illuminate\Support\Facades\Mail;
 
 class ManagersController extends Controller
 {
@@ -25,19 +27,38 @@ class ManagersController extends Controller
 
     public function store(Request $request)
     {
-        //generate a random password
-        $password = Str::random(6);
-      
-        $managers= Manager::create($request->all());
+         //generate a random password
+         $passwordGenerate = Str::random(6);
+         
         //upload CIN scané
-        $request->validate(['CIN_path'=>'required|image|mimes:jpeg,png,jpg|max:2048',]);
-        if($request->hasFile('CIN_path')){
-            $photoPath= $request->file('CIN_path')->store('CIN_PHOTOS','public');
-        }
+        $request->validate(['CIN_recto_path'=>'required|image|mimes:jpeg,png,jpg|max:2048',]);
+        $request->validate(['CIN_verso_path'=>'required|image|mimes:jpeg,png,jpg|max:2048',]);
 
-        //hash the genrerated password before storing it in the db;
-        $managers->password= Hash::make($password);
+        //create manager
+        $managers=new Manager;
+            $managers->password = $passwordGenerate;
+             $managers->nom =$request->input('nom');
+             $managers->prenom = $request->input('prenom');
+             $managers->phone =$request->input('phone');
+             $managers->email = $request->input('email');
+             $managers->pays = $request->input('pays');
+             $managers->ville = $request->input('ville');
+             $managers->RIB = $request->input('RIB');
+             $managers->NomBanque = $request->input('NomBanque');
+
+        if($request->hasFile('CIN_recto_path')){
+             $name= $request->file('CIN_recto_path')->getClientOriginalName();
+            $request->file('CIN_recto_path')->storeAs('public/CIN_photo', $name);
+            $managers->CIN_recto_path= $name;
+        }
+        
+        if($request->hasFile('CIN_verso_path')){
+            $name= $request->file('CIN_verso_path')->getClientOriginalName();
+            $request->file('CIN_verso_path')->storeAs('public/category_photo', $name);
+            $managers->CIN_verso_path= $name;
+        }
         $managers->save();
+        Mail::to($managers->email)->send(new CreateManager($managers,$passwordGenerate));
         
         return redirect()->route('managers.index');
     }
@@ -56,8 +77,8 @@ class ManagersController extends Controller
     {
         $managers= Manager::findOrFail($id);
         $managers->update($request->all());
-    $managers->save();
-    return redirect()->route('managers.index');
+        $managers->save();
+        return redirect()->route('managers.index');
     }
 
     public function destroy($id)
