@@ -48,6 +48,15 @@ class MissiosnController extends Controller
         $missions->save();
         return redirect()->back()->with('message','Mission Edited successufully');
     }
+    public function getMissionsByCategory($categoryId)
+    {
+        $missions = Mission::where('categorie_id', $categoryId)->get();
+    
+        return response()->json(['missions' => $missions]);
+    }
+    
+
+    
 
     public function destroy(Mission $mission)
     { 

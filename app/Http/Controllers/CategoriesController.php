@@ -57,18 +57,16 @@ class CategoriesController extends Controller
         $categories= Categorie::with('managers')->findOrFail($category->id);
         return view('categories.show', [
             'missions' => $missions,
+            'category'=>$categories,
             'missionsCount' => $missionsCount,
             'managersCount' => $managersCount,
         ]);
     }
 
-    return view('categories.show', [
-        'missions' => $missions,
-        'category' => $categoryData, // Corrected variable name
-        'missionsCount' => $missionsCount,
-    ]);
-}
-     public function fetchCategories(){
+    
+
+     public function fetchCategories()
+     {
         
         $categories = Categorie::withCount('mission')->get();
 

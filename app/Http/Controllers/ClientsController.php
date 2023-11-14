@@ -13,8 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Laravel\Jetstream\Jetstream;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Str;
-use App\Mail\CreateManager;
-use Illuminate\Support\Facades\Mail;
+
 
 class ClientsController extends Controller
 {
@@ -129,7 +128,7 @@ class ClientsController extends Controller
             $image = $request->file('cin_recto');
             $filename = time() . '_' . $image->getClientOriginalName();
             $image->storeAs('public/cin_images', $filename); // You may customize the storage path
-            $client->cin_recto = $filename;
+            $client->cin_recto_path = $filename;
         }
     
         // Handle file uploads for cin_verso
@@ -137,7 +136,7 @@ class ClientsController extends Controller
             $image = $request->file('cin_verso');
             $filename = time() . '_' . $image->getClientOriginalName();
             $image->storeAs('public/cin_images', $filename); // You may customize the storage path
-            $client->cin_verso = $filename;
+            $client->cin_verso_path = $filename;
         }
     
         // Update other fields as needed
