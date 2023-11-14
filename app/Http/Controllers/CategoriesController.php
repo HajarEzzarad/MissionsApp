@@ -77,8 +77,12 @@ class CategoriesController extends Controller
        
         $missions = Mission::where('categorie_id', $id);
         $categories= Categorie::findOrFail($id);
-        $categories->update($request->all());
-        $categories->icon_path=$request->input('icon_path');
+        $categories->nom= $request->input('nom');
+        if($request->hasFile('icon_path')){
+            $name= $request->file('icon_path')->getClientOriginalName();
+            $imagePath = $request->file('icon_path')->storeAs('public/category_photo', $name);
+            $categories->icon_path= $imagePath;
+        }
         $categories->save();
         return redirect()->route('categories.index', [
             'missions' => $missions,
