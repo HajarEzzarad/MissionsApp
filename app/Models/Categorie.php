@@ -22,4 +22,12 @@ class Categorie extends Model
     {
         return $this->mission->count();
     }
+    public function managerCount()
+    {
+        return $this->managers()->count();
+    }
+    public function managers()
+    {
+        return $this->belongsToMany(Manager::class, 'category_manager');
+    }
 }

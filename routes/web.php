@@ -30,6 +30,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('managers', \App\Http\Controllers\ManagersController::class);
     /***categories CRUD */
     Route::resource('categories', \App\Http\Controllers\CategoriesController::class);
+    //add managers to a category and delete it
+    Route::get('/categories/{category}/datach-manager/{manager}', [\App\Http\Controllers\CategoriesController::class, 'detachManager'])->name('categories.detachManager');
+    Route::get('/categories/{category}/add-manager/{manager}', [\App\Http\Controllers\CategoriesController::class, 'addManager'])->name('categories.addManager');
     //*****Missions 
     Route::get('categories/{category}/missions/create',[\App\Http\Controllers\MissiosnController::class,'create'])->name('create-mission');
     Route::POST('categories/{category}/missions',[\App\Http\Controllers\MissiosnController::class,'store'])->name('store-mission');

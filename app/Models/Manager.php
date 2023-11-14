@@ -68,4 +68,8 @@ class Manager extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+    public function category()
+    {
+        return $this->belongsToMany(Categorie::class, 'category_manager');
+    }
 }
