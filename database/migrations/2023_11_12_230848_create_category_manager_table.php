@@ -11,16 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('missions', function (Blueprint $table) {
+        Schema::create('category_manager', function (Blueprint $table) {
             $table->id();
-            $table->string('nom');
-            $table->string('prix');
-            $table->string('description');
-            $table->string('link');
-            $table->foreignId('categorie_id')->references('id')->on('categories')
-            ->onDelete('cascade');
-
+            $table->unsignedBigInteger('categorie_id');
+            $table->unsignedBigInteger('manager_id');
             $table->timestamps();
+    
+            $table->foreign('categorie_id')->references('id')->on('categories');
+            $table->foreign('manager_id')->references('id')->on('managers');
         });
     }
 
@@ -29,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('missions');
+        Schema::dropIfExists('category_manager');
     }
 };

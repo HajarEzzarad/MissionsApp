@@ -83,7 +83,7 @@
                     {{ $clientPersontage}}, 
                     {{ $managerPersontage}}
                 ],
-                    backgroundColor: ['blue','green'],
+                    backgroundColor: ['blue','purple'],
             }],
         },
         options:{

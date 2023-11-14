@@ -11,6 +11,7 @@
                 <form method="post" action="{{ route('categories.store') }}" enctype="multipart/form-data">
                     @csrf
                     <div class="shadow overflow-hidden sm:rounded-md">
+                        
                         <div class="px-4 py-5 bg-white sm:p-6">
                             <label for="nom" class="block font-medium text-sm text-gray-700">NOM</label>
                             <input type="text" name="nom" id="nom" class="form-input rounded-md shadow-sm mt-1 block w-full"

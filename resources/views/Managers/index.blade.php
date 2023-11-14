@@ -70,7 +70,7 @@
                                             {{ $manager->phone}}
                                         </td>
                                           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                          
+                                         
                                           </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                               <a href="{{ route('managers.show', $manager->id) }}" class="text-blue-600 hover:text-blue-900 mb-2 mr-2">View</a>

@@ -16,7 +16,7 @@ class ManagersController extends Controller
     public function index()
     {
         $managers = Manager::all();
-
+        
         return view('managers.index', compact('managers'));
     }
 
@@ -54,7 +54,7 @@ class ManagersController extends Controller
         
         if($request->hasFile('CIN_verso_path')){
             $name= $request->file('CIN_verso_path')->getClientOriginalName();
-            $request->file('CIN_verso_path')->storeAs('public/category_photo', $name);
+            $request->file('CIN_verso_path')->storeAs('public/CIN_photo', $name);
             $managers->CIN_verso_path= $name;
         }
         $managers->save();
@@ -66,7 +66,10 @@ class ManagersController extends Controller
     public function show($id)
     {
         $managers= Manager::findOrFail($id);
-        return view('managers.show', compact('managers'));
+        $categoriesCount = Manager::with('category')->find($managers->id);
+        $categoriesCount = $managers->category->count();
+        
+        return view('managers.show', compact('managers', 'categoriesCount'));
     }
     public function edit($id)
     {
