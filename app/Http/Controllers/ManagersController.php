@@ -81,7 +81,25 @@ class ManagersController extends Controller
     public function update(Request $request, $id)
     {
         $managers= Manager::findOrFail($id);
-        $managers->update($request->all());
+        $managers->nom =$request->input('nom');
+        $managers->prenom = $request->input('prenom');
+        $managers->phone =$request->input('phone');
+        $managers->email = $request->input('email');
+        $managers->pays = $request->input('pays');
+        $managers->ville = $request->input('ville');
+        $managers->RIB = $request->input('RIB');
+        $managers->NomBanque = $request->input('NomBanque');
+        if($request->hasFile('CIN_recto_path')){
+            $name= $request->file('CIN_recto_path')->getClientOriginalName();
+            $request->file('CIN_recto_path')->storeAs('public/CIN_photo', $name);
+            $managers->CIN_recto_path= $name;
+           }
+           
+           if($request->hasFile('CIN_verso_path')){
+               $name= $request->file('CIN_verso_path')->getClientOriginalName();
+               $request->file('CIN_verso_path')->storeAs('public/CIN_photo', $name);
+               $managers->CIN_verso_path= $name;
+           }
         $managers->save();
         return redirect()->route('managers.index');
     }
