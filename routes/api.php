@@ -2,7 +2,10 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\ClientsController;
+use App\Http\Controllers\ManagersController;
+use App\Http\Controllers\CategoriesController;
+use App\Http\Controllers\MissiosnController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -18,3 +21,27 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+Route::post('create-client', [ClientsController::class, 'createClient']);
+Route::post('login', [ClientsController::class, 'login']);
+Route::post('updateClient/{id}', [ClientsController::class, 'updateClient']);
+Route::post('loginM', [ManagersController::class, 'login']);
+Route::get('getCategorie', [CategoriesController::class, 'fetchCategories']);
+Route::get('/categories/{category}/missions', [MissiosnController::class, 'getMissionsByCategory']);
+Route::get('/categories/for-manager/{managerId}', [CategoriesController::class, 'categoriesForManager']);
+Route::post('/delete/{id}', [CategoriesController::class, 'deleteC']);
+Route::post('categories/add', [CategoriesController::class, 'addCategoryByManager']);
+Route::post('categories/update/{id}', [CategoriesController::class, 'updateCategory']);
+Route::post('missions/{id}', [MissiosnController::class, 'deleteMission']);
+Route::post('categories/{categoryId}/missions', [MissiosnController::class,'createMissionAPI']);
+Route::post('update/missions/{missionId}', [MissiosnController::class,'updateMission']);
+Route::get('/clients', [ClientsController::class, 'getClients']);
+Route::get('/managers', [ManagersController::class, 'getManagers']);
+Route::post('/getUserDetails', [ManagersController::class, 'getUserDetails']);
+Route::put('/missioncomplete/{clientId}', [ClientsController::class,'updateMissionComplete']);
+Route::get('/mission-history/{missionIds}',[ MissiosnController::class,'getMissionHistory']);
+Route::put('/update-mission-status', [ClientsController::class, 'updateMissionStatus']);
+

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Manager;
+use App\Models\Client;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Jetstream\Jetstream;
@@ -109,4 +111,52 @@ class ManagersController extends Controller
         $managers->delete();
         return redirect()->route('managers.index');
     }
+    public function login(Request $request)
+{
+    $user = Manager::where('email', $request->email)->first();
+
+    if ($user && $request->password === $user->password) {
+        // Authentication successful
+        return response()->json([
+            'user' => $user,
+        ], 200);
+    } else {
+        return response()->json(['message' => 'Unauthorized'], 401);
+    }
+}
+public function getManagers()
+{
+    $users = Manager::all();
+
+    return response()->json($users);
+}
+
+public function getUserDetails(Request $request)
+{
+    $userId = $request->input('userId');
+    $role = $request->input('role');
+
+    // Determine the table based on the role
+    $table = $role === 'Client' ? 'Client' : 'Manager';
+
+    // Use the selected table to fetch user details
+    $user = $table === 'Client'
+        ? Client::where('id', $userId)->first()
+        : Manager::where('id', $userId)->first();
+
+    if ($user) {
+    return response()->json([
+        'id' => $user->id,
+        'name' => $user->nom,
+        'prenom' => $user->prenom,
+        'profile' => $user->profile_photo_url,
+         'role'=>$role
+        // Add any other fields you need
+    ]);
+} else {
+    return response()->json(['error' => 'User not found'], 404);
+}
+
+}
+
 }

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Categorie;
 use App\Models\Manager;
 use App\Models\Mission;
+use Illuminate\Support\Facades\Storage;
 
 class CategoriesController extends Controller
 {
@@ -57,11 +58,137 @@ class CategoriesController extends Controller
         $categories= Categorie::with('managers')->findOrFail($category->id);
         return view('categories.show', [
             'missions' => $missions,
-            'category' => $categories,
+            'category'=>$categories,
             'missionsCount' => $missionsCount,
             'managersCount' => $managersCount,
         ]);
     }
+
+    
+    //api for the app
+     public function fetchCategories()
+     {
+        
+        $categories = Categorie::withCount('mission')->get();
+
+        // Assuming there is a 'missions_count' attribute in the response
+        $response = ['categories' => $categories];
+    
+        return response()->json($response);
+     }
+
+     public function categoriesForManager($managerId)
+    {
+      // Find the manager
+      $manager = Manager::findOrFail($managerId);
+
+       // Load the categories associated with the manager and count of missions for each category
+       $categories = $manager->category()->withCount('mission')->get();
+
+       return response()->json(['categories' => $categories]);
+    }
+    public function deleteC($id)
+    {
+        $categories= Categorie::findOrFail($id);
+        $categories->managers()->detach();
+        $categories->mission()->delete();
+        $categories->delete();
+        return response()->json(['message' => 'Category deleted successfully']);
+
+
+    }
+     
+    public function updateCategory(Request $request, $id)
+    {
+        try {
+            // Find the category
+            $category = Categorie::findOrFail($id);
+
+            // Validate the request data
+            $request->validate([
+                'nom' => 'required|string',
+                // Add other validation rules as needed
+            ]);
+
+            // Update the category fields
+            $category->nom = $request->input('nom');
+
+            // Handle image update
+            if ($request->hasFile('icon_path')) {
+                // Delete the existing image if it exists
+                if ($category->icon_path) {
+                    Storage::delete('public/category_images/' . $category->icon_path);
+                }
+
+                // Upload the new image
+                $image = $request->file('icon_path');
+                $imageName = time() . '.' . $image->getClientOriginalExtension();
+                $image->storeAs('public/category_images', $imageName);
+
+                // Update the icon_path field
+                $category->icon_path = $imageName;
+            }
+
+            // Save the updated category
+            $category->save();
+
+            return response()->json(['message' => 'Category updated successfully']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error updating category', 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    
+    // CategoriesController.php
+
+          public function addCategoryByManager(Request $request)
+    {
+         try {
+        // Get the manager ID from the request
+        $managerId = $request->input('manager_id');
+
+        // Find the manager
+        $manager = Manager::find($managerId);
+
+        // Check if the manager exists
+        if (!$manager) {
+            return response()->json(['error' => 'Manager not found'], 404);
+        }
+
+        // Validate the request data
+        // $request->validate([
+        //     'nom' => 'required|string',
+        //     'icon_path' => 'required|string',
+        //     // Add other validation rules as needed
+        // ]);
+
+        // Create a new category
+        $category = new Categorie([
+            'nom' => $request->input('nom'),
+            // Add other fields as needed
+        ]);
+
+        // Handle image upload
+        if ($request->hasFile('icon_path')) {
+            $image = $request->file('icon_path');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->storeAs('public/category_images', $imageName);
+            $category->icon_path = $imageName;
+        }
+
+        // Save the category and associate it with the manager
+        $manager->category()->save($category);
+
+        return response()->json(['message' => 'Category added successfully'], 201);
+     } catch (\Exception $e) {
+        return response()->json(['error' => 'Error adding category', 'message' => $e->getMessage()], 500);
+      }
+    }
+
+    
+
+    
+
     public function edit($id)
     {
         $AllManagers= Manager::all();
