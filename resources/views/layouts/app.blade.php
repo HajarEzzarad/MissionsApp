@@ -13,8 +13,13 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         <link href="css/app.css" rel="stylesheet">
+        <!-- firebase-->
+        <script type="module" src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js"></script>
+<script type="module" src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js"></script>
 
         <!-- Styles -->
+        <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+
         @livewireStyles
         <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     </head>

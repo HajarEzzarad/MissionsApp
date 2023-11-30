@@ -10,6 +10,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 
+
 class Client extends Authenticatable
 {
     use HasFactory;
@@ -18,6 +19,7 @@ class Client extends Authenticatable
     use HasProfilePhoto;
     use Notifiable;
     use TwoFactorAuthenticatable;
+   
 
     /**
      * The attributes that are mass assignable.
@@ -69,4 +71,10 @@ class Client extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+
+    public function getChatType()
+    {
+        return 'client';
+    }
 }

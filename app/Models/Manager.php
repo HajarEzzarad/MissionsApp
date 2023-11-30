@@ -10,6 +10,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 
+
 class Manager extends Authenticatable
 {
     use HasFactory;
@@ -71,5 +72,12 @@ class Manager extends Authenticatable
     public function category()
     {
         return $this->belongsToMany(Categorie::class, 'category_manager');
+    }
+  
+
+
+   public function getChatType()
+    {
+        return 'manager';
     }
 }

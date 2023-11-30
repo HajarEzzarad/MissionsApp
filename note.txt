@@ -78,3 +78,934 @@ TYPELEVEL (level 1, level 2, level 3)
         }
     });
 </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+       <div x-data="{ activeTab: 'managers' }">
+
+  <div class="flex justify-center items-center">
+  <button @click="activeTab = 'chats'" :class="{ 'border-b-2 border-purple-500': activeTab === 'chats', 'text-gray-500': activeTab !== 'chats' }" class="px-4 py-2 mx-1 focus:outline-none">Chats</button>
+  <button @click="activeTab = 'managers'" :class="{ 'border-b-2 border-purple-500': activeTab === 'managers', 'text-gray-500': activeTab !== 'managers' }" class="px-4 py-2 mx-1 focus:outline-none">Managers</button>
+  <button @click="activeTab = 'clients'" :class="{ 'border-b-2 border-purple-500': activeTab === 'clients', 'text-gray-500': activeTab !== 'clients' }" class="px-4 py-2 mx-1 focus:outline-none">Clients</button>
+    
+  </div>
+
+  <!-- Tab content -->
+  <div x-show="activeTab === 'chats'" class="chat-section">
+   
+    <ul id="chats" class="chat-container">
+   
+    </ul>
+  </div>
+  <div x-show="activeTab === 'managers'" class="managers-section">
+    
+    <ul class="chat-container">
+      <!-- Display manager users here -->
+      @foreach($managers as $d)
+      <li>
+        <a data-manager-id="{{ $d->id }}" data-manager-role="{{$d->getChatType()}}" data-manager-nom="{{ $d['nom'] }}" data-manager-prenom="{{ $d['prenom'] }}" class="manager-item flex items-center px-3 py-2 text-sm transition duration-150 ease-in-out border-b border-gray-300 cursor-pointer hover:bg-gray-100 focus:outline-none">
+          <img class="object-cover w-10 h-10 rounded-full" src="https://cdn.pixabay.com/photo/2018/09/12/12/14/man-3672010__340.jpg" alt="username" />
+          <div class="w-full pb-2">
+            <div class="flex justify-between">
+              <span class="block ml-2 font-semibold text-black-600"> {{ $d['nom'] }} {{ $d['prenom'] }}</span>
+              <span class="block ml-2 text-sm text-black-600">25 minutes</span>
+            </div>
+            <span id="lastMsg_{{ $d->id }}" class="block ml-2 text-sm text-black-600"></span>
+          </div>
+        </a>
+      </li>
+    @endforeach
+    </ul>
+  </div>
+
+  <div x-show="activeTab === 'clients'" class="clients-section">
+ 
+    <ul class="chat-container">
+      <!-- Display client users here -->
+      @foreach($clients as $d)
+      <li>
+        <a data-manager-id="{{ $d->id }}" data-manager-role="{{$d->getChatType()}}" class="manager-item flex items-center px-3 py-2 text-sm transition duration-150 ease-in-out border-b border-gray-300 cursor-pointer hover:bg-gray-100 focus:outline-none">
+          <img class="object-cover w-10 h-10 rounded-full" src="https://cdn.pixabay.com/photo/2018/09/12/12/14/man-3672010__340.jpg" alt="username" />
+          <div class="w-full pb-2">
+            <div class="flex justify-between">
+              <span class="block ml-2 font-semibold text-black-600"> {{ $d['nom'] }} {{ $d['prenom'] }}</span>
+              <span class="block ml-2 text-sm text-black-600">25 minutes</span>
+            </div>
+            <span id="lastMsg_{{ $d->id }}" class="block ml-2 text-sm text-black-600"></span>
+          </div>
+        </a>
+      </li>
+    @endforeach
+    </ul>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//Chat 
+
+ 
+  <x-app-layout>
+<x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            Chat
+        </h2>
+    </x-slot>
+<style>.selected {
+    background-color: #e2e8f0; 
+}</style>
+        <div>
+    <div class="container mx-autos w-screen">
+      <div class="min-w-full border rounded lg:grid lg:grid-cols-3">
+        <div class="border-r border-gray-300 lg:col-span-1">
+          <div class="mx-3 my-3">
+            <div class="relative text-gray-600">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-2">
+                <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  viewBox="0 0 24 24" class="w-6 h-6 text-gray-300">
+                  <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+              </span>
+              <input type="search" class="block w-full py-2 pl-10 bg-gray-100 rounded outline-none" name="search"
+                placeholder="Search" required />
+            </div>
+          </div>
+
+          <ul class="overflow-auto h-[32rem]">
+            <h2 class="my-2 mb-2 ml-2 text-lg text-gray-600">Chats</h2>
+            @foreach($managers as $manager)
+            <li>
+              <a data-manager-id="{{ $manager->id }}" class="manager-item flex items-center px-3 py-2 text-sm transition duration-150 ease-in-out border-b border-gray-300 cursor-pointer hover:bg-gray-100 focus:outline-none">
+                <img class="object-cover w-10 h-10 rounded-full"
+                  src="https://cdn.pixabay.com/photo/2018/09/12/12/14/man-3672010__340.jpg" alt="username" />
+                <div class="w-full pb-2">
+                  <div class="flex justify-between">
+                    <span class="block ml-2 font-semibold text-gray-600"> {{ $manager->nom}} {{ $manager->prenom}}</span>
+                    <span class="block ml-2 text-sm text-gray-600">25 minutes</span>
+                  </div>
+                  <span id="bye-{{ $manager->id }}" class="block ml-2 text-sm text-gray-600"></span>
+                </div>
+              </a>
+            </li>
+            @endforeach
+          </ul>
+        </div>
+        <div class="hidden lg:col-span-2 lg:block">
+          <div class="w-full">
+            <!--chat between manager and admin-->
+            <div class="container mx-auto p-4">
+    <div id="name_sender"class="text-2xl font-bold mb-4"></div>
+    
+<div >
+    <div id="messages" class="mb-4 flex-1 overflow-y-auto "></div>
+
+    <div class="flex items-center" id="sendMsg">
+        <input type="text" id="msgTxt" placeholder="Type your message" class="block w-full py-2 pl-4 mx-3 bg-gray-100 rounded-full outline-none focus:text-gray-700">
+        <button id="msgBtn" value="send" type="submit" onclick="module.sendMsg()" class="p-2 bg-purple-300 text-white">Send</button>
+    </div>
+</div>
+                </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+        </div>
+      
+<script>
+    module = {};
+</script>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+    import { getDatabase, ref, set, remove, onChildAdded, onChildRemoved } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAehxQi2ll_DDEcheQTpXFVlj8FXHTHsKE",
+      authDomain: "test-chat-71d55.firebaseapp.com",
+      databaseURL: "https://test-chat-71d55-default-rtdb.firebaseio.com",
+      projectId: "test-chat-71d55",
+      storageBucket: "test-chat-71d55.appspot.com",
+      messagingSenderId: "219141915987",
+      appId: "1:219141915987:web:d8325073970c0f30d7cda6",
+      measurementId: "G-RRXEL7F27D"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+   
+//display chat for each manager
+// Add a click event listener to each manager item
+document.querySelectorAll('.manager-item').forEach(function (managerItem) {
+        managerItem.addEventListener('click', function () {
+            const managerId = this.getAttribute('data-manager-id');
+            document.querySelectorAll('.manager-item').forEach(function (item) {
+            item.classList.remove('selected');
+        });
+        this.classList.add('selected');
+
+            // Update the chat window based on the selected manager
+            updateChat(managerId);
+            fetchLastMessage(managerId);
+        });
+    });
+
+    
+// Function to clear existing messages
+function clearMessages() {
+    name_sender.innerHTML = '';
+    messages.innerHTML = '';
+}
+
+// Function to display messages
+function displayMessages(data, messageType) {
+  const timestamp = data.val().timestamp;
+    const formattedTime = formatTimestamp(timestamp); 
+
+    messages.innerHTML += `<li class="flex justify-${messageType}"><div class="relative max-w-xl px-4 py-2 text-gray-700 bg-${messageType === 'end' ? 'purple' : 'gray'}-300 rounded shadow m-1"><span class="block" id=${data.key}>${data.val().msg}</span><span class="text-sm text-gray-500">${formattedTime}</span>${messageType === 'end' ? '<button id="dltMsg" onclick="module.dltMsg(' + data.key + ')">DELETE</button>' : ''}</div></li>`;
+
+}
+
+function formatTimestamp(timestamp) {
+    const date = new Date(timestamp);
+    return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+}
+
+// Function to update the chat window based on the selected manager
+function updateChat(managerId) {
+    // Clear existing messages
+    clearMessages();
+
+    // variables
+    var msgTxt = document.getElementById('msgTxt');
+    const senderName = "{{ auth()->user()->name }}";
+    const senderId = "{{ auth()->user()->id }}";
+
+    // TO SEND MESSAGES
+    module.sendMsg = function sendMsg() {
+        var msg = msgTxt.value;
+        var timestamp = new Date().getTime();
+        set(ref(db, "messages/Admin-to-manager/" + timestamp), {
+            msg: msg,
+            senderName: senderName,
+            senderId: senderId,
+            recieverId: managerId,
+            timestamp : timestamp,
+        })
+
+        msgTxt.value = "";
+    }
+
+    // Display messages for Admin-to-manager chat
+    onChildAdded(ref(db, "messages/Admin-to-manager/"), (data) => {
+        if (data.val().senderId == senderId && data.val().recieverId == managerId) {
+            displayMessages(data, 'end');
+        }
+    });
+
+    // Display messages for Manager-to-admin chat
+      onChildAdded(ref(db, "messages/Manager-to-admin/"), (data) => {
+        if (data.val().senderId == managerId && data.val().recieverId == senderId) {
+            displayMessages(data, 'start');
+        }
+    });
+
+     // Display the name of the selected manager
+     const selectedManager = managers.find(manager => manager.id == managerId);
+    if (selectedManager) {
+        name_sender.innerHTML = `<span class="block">${selectedManager.nom} ${selectedManager.prenom}</span>`;
+    }
+}
+
+function fetchLastMessage(managerId) {
+    // Reference to the Admin-to-manager messages
+    const adminToManagerRef = ref(db, "messages/Admin-to-manager/");
+
+    // Query to get the last message for the selected manager
+    const query = orderByChildQuery(limitToLastQuery(1, adminToManagerRef), "timestamp");
+
+    // Attach a listener for the query
+    onChildAdded(query, (data) => {
+        // Check if the message is from the selected manager
+        if (data.val().receiverId === managerId) {
+            const lastMessage = data.val().msg;
+            const senderName = data.val().senderName;
+            const displayMessage = senderName === senderName ? `you: ${lastMessage}` : `${senderName}: ${lastMessage}`;
+            document.getElementById(`bye-${managerId}`).innerHTML = displayMessage;
+        }
+    });
+}
+
+
+    // TO DELETE MSG
+    module.dltMsg = function dltMsg(key){
+        remove(ref(db,"messages/Admin-to-manager/"+key));
+    }
+
+    // WHEN MSG IS DELETED
+    onChildRemoved(ref(db,"messages/Admin-to-manager/"),(data)=>{
+        var msgBox = document.getElementById(data.key);
+        messages.removeChild(msgBox);
+    })
+</script>
+
+
+
+    </x-app-layout>
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            Chat
+        </h2>
+    </x-slot>
+  <style> 
+*,
+*:before,
+*:after {
+    box-sizing: border-box;
+}
+
+:root {
+    --white: #fff;
+    --black: #000;
+    --bg: #f8f8f8;
+    --grey: #999;
+    --dark: #1a1a1a;
+    --light: #e6e6e6;
+    --wrapper: 1000px;
+    --blue: #00b0ff;
+}
+
+body {
+    background-color: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-family: "Source Sans Pro", sans-serif;
+    font-weight: 400;
+    background-image: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/382994/image.jpg");
+    background-size: cover;
+    background-repeat: none;
+}
+
+.wrapper {
+    position: relative;
+    left: 50%;
+    width: var(--wrapper);
+    height: 800px;
+    transform: translate(-50%, 0);
+}
+
+.container {
+    position: relative;
+    top: 50%;
+    left: 50%;
+    width: 80%;
+    height: 75%;
+    background-color: var(--white);
+    transform: translate(-50%, -50%);
+}
+
+.container .left {
+    float: left;
+    width: 37.6%;
+    height: 100%;
+    border: 1px solid var(--light);
+    background-color: var(--white);
+}
+
+.container .left .top {
+    position: relative;
+    width: 100%;
+    height: 96px;
+    padding: 29px;
+}
+
+.container .left input {
+    float: left;
+    width: 188px;
+    height: 42px;
+    padding: 0 15px;
+    border: 1px solid var(--light);
+    background-color: #eceff1;
+    border-radius: 21px;
+    font-family: "Source Sans Pro", sans-serif;
+    font-weight: 400;
+    &:focus {
+        outline: none;
+    }
+}
+
+.container .left a.search {
+    display: block;
+    float: left;
+    width: 42px;
+    height: 42px;
+    margin-left: 10px;
+    border: 1px solid var(--light);
+    background-color: var(--blue);
+    background-image: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/382994/name-type.png");
+    background-repeat: no-repeat;
+    background-position: top 12px left 14px;
+    border-radius: 50%;
+}
+
+.container .left .people {
+    margin-left: -1px;
+    border-right: 1px solid var(--light);
+    border-left: 1px solid var(--light);
+    width: calc(100% + 2px);
+}
+
+.container .left .people .person {
+    position: relative;
+    width: 100%;
+    padding: 12px 10% 16px;
+    cursor: pointer;
+    background-color: var(--white);
+}
+
+.container .left .people .person img {
+    float: left;
+    width: 40px;
+    height: 40px;
+    margin-right: 12px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.container .left .people .person .name {
+    font-size: 14px;
+    line-height: 22px;
+    color: var(--dark);
+    font-weight: 600;
+}
+
+.container .left .people .person .time {
+    font-size: 14px;
+    position: absolute;
+    top: 16px;
+    right: 10%;
+    padding: 0 0 5px 5px;
+    color: var(--grey);
+    background-color: var(--white);
+}
+
+.container .left .people .person .preview {
+    font-size: 14px;
+    display: inline-block;
+    overflow: hidden !important;
+    width: 70%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: var(--grey);
+}
+
+.container .left .people .person.active,
+.container .left .people .person:hover {
+    margin-top: -1px;
+    margin-left: -1px;
+    padding-top: 13px;
+    border: 0;
+    background-color: var(--blue);
+    width: calc(100% + 2px);
+    padding-left: calc(10% + 1px);
+}
+
+.container .right {
+    position: relative;
+    float: left;
+    width: 62.4%;
+    height: 100%;
+}
+
+.container .right .top {
+    width: 100%;
+    height: 47px;
+    padding: 15px 29px;
+    background-color: #eceff1;
+}
+
+.container .right .top span {
+    font-size: 15px;
+    color: var(--grey);
+}
+
+.container .right .chat {
+    position: relative;
+    display: none;
+    overflow: hidden;
+    padding: 0 35px 92px;
+    border-width: 1px 1px 1px 0;
+    border-style: solid;
+    border-color: var(--light);
+    height: calc(100% - 48px);
+    justify-content: flex-end;
+    flex-direction: column;
+}
+
+.container .right .chat.active-chat {
+    display: block;
+    display: flex;
+}
+
+.container .right .write {
+    position: absolute;
+    bottom: 29px;
+    left: 30px;
+    height: 42px;
+    padding-left: 8px;
+    border: 1px solid var(--light);
+    background-color: #eceff1;
+    width: calc(100% - 58px);
+    border-radius: 5px;
+}
+
+.container .right .write input {
+    font-size: 16px;
+    float: left;
+    width: 347px;
+    height: 40px;
+    padding: 0 10px;
+    color: var(--dark);
+    border: 0;
+    outline: none;
+    background-color: #eceff1;
+    font-family: "Source Sans Pro", sans-serif;
+}
+
+.container .right .write-link.attach:before {
+    display: inline-block;
+    float: left;
+    width: 20px;
+    height: 42px;
+    content: "";
+    background-image: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/382994/attachment.png");
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.container .right .write-link.smiley:before {
+    display:
+
+</style>
+    <div class="wrapper">
+    <div class="container">
+        <div class="left">
+            <div class="top">
+                <input type="text" placeholder="Search" />
+                <a href="javascript:;" class="search"></a>
+            </div>
+            <ul class="people">
+                <li class="person" data-chat="person1">
+                    <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/382994/thomas.jpg" alt="" />
+                    <span class="name">Thomas Bangalter</span>
+                    <span class="time">2:09 PM</span>
+                    <span class="preview">I was wondering...</span>
+                </li>
+                <li class="person" data-chat="person2">
+                    <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/382994/dog.png" alt="" />
+                    <span class="name">Dog Woofson</span>
+                    <span class="time">1:44 PM</span>
+                    <span class="preview">I've forgotten how it felt before</span>
+                </li>
+                <li class="person" data-chat="person3">
+                    <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/382994/louis-ck.jpeg" alt="" />
+                    <span class="name">Louis CK</span>
+                    <span class="time">2:09 PM</span>
+                    <span class="preview">But we’re probably gonna need a new carpet.</span>
+                </li>
+                <li class="person" data-chat="person4">
+                    <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/382994/bo-jackson.jpg" alt="" />
+                    <span class="name">Bo Jackson</span>
+                    <span class="time">2:09 PM</span>
+                    <span class="preview">It’s not that bad...</span>
+                </li>
+                <li class="person" data-chat="person5">
+                    <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/382994/michael-jordan.jpg" alt="" />
+                    <span class="name">Michael Jordan</span>
+                    <span class="time">2:09 PM</span>
+                    <span class="preview">Wasup for the third time like is 
+you blind bitch</span>
+                </li>
+                <li class="person" data-chat="person6">
+                    <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/382994/drake.jpg" alt="" />
+                    <span class="name">Drake</span>
+                    <span class="time">2:09 PM</span>
+                    <span class="preview">howdoyoudoaspace</span>
+                </li>
+                <li class="person" data-chat="person6">
+                    <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/382994/drake.jpg" alt="" />
+                    <span class="name">Drake</span>
+                    <span class="time">2:09 PM</span>
+                    <span class="preview">howdoyoudoaspace</span>
+                </li>
+                <li class="person" data-chat="person6">
+                    <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/382994/drake.jpg" alt="" />
+                    <span class="name">Drake</span>
+                    <span class="time">2:09 PM</span>
+                    <span class="preview">howdoyoudoaspace</span>
+                </li>
+                <li class="person" data-chat="person6">
+                    <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/382994/drake.jpg" alt="" />
+                    <span class="name">Drake</span>
+                    <span class="time">2:09 PM</span>
+                    <span class="preview">howdoyoudoaspace</span>
+                </li>
+                 <li class="person" data-chat="person6">
+                    <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/382994/drake.jpg" alt="" />
+                    <span class="name">Drake</span>
+                    <span class="time">2:09 PM</span>
+                    <span class="preview">howdoyoudoaspace</span>
+                </li>
+            </ul>
+        </div>
+        <div class="right">
+            <div class="top"><span>To: <span class="name">Dog Woofson</span></span></div>
+            <div class="chat" data-chat="person1">
+                <div class="conversation-start">
+                    <span>Today, 6:48 AM</span>
+                </div>
+                <div class="bubble you">
+                    Hello,
+                </div>
+                <div class="bubble you">
+                    it's me.
+                </div>
+                <div class="bubble you">
+                    I was wondering...
+                </div>
+            </div>
+            <div class="chat" data-chat="person2">
+                <div class="conversation-start">
+                    <span>Today, 5:38 PM</span>
+                </div>
+                <div class="bubble you">
+                    Hello, can you hear me?
+                </div>
+                <div class="bubble you">
+                    I'm in California dreaming
+                </div>
+                <div class="bubble me">
+                    ... about who we used to be.
+                </div>
+                <div class="bubble me">
+                    Are you serious?
+                </div>
+                <div class="bubble you">
+                    When we were younger and free...
+                </div>
+                <div class="bubble you">
+                    I've forgotten how it felt before
+                </div>
+            </div>
+            <div class="chat" data-chat="person3">
+                <div class="conversation-start">
+                    <span>Today, 3:38 AM</span>
+                </div>
+                <div class="bubble you">
+                    Hey human!
+                </div>
+                <div class="bubble you">
+                    Umm... Someone took a shit in the hallway.
+                </div>
+                <div class="bubble me">
+                    ... what.
+                </div>
+                <div class="bubble me">
+                    Are you serious?
+                </div>
+                <div class="bubble you">
+                    I mean...
+                </div>
+                <div class="bubble you">
+                    It’s not that bad...
+                </div>
+                <div class="bubble you">
+                    But we’re probably gonna need a new carpet.
+                </div>
+            </div>
+            <div class="chat" data-chat="person4">
+                <div class="conversation-start">
+                    <span>Yesterday, 4:20 PM</span>
+                </div>
+                <div class="bubble me">
+                    Hey human!
+                </div>
+                <div class="bubble me">
+                    Umm... Someone took a shit in the hallway.
+                </div>
+                <div class="bubble you">
+                    ... what.
+                </div>
+                <div class="bubble you">
+                    Are you serious?
+                </div>
+                <div class="bubble me">
+                    I mean...
+                </div>
+                <div class="bubble me">
+                    It’s not that bad...
+                </div>
+            </div>
+            <div class="chat" data-chat="person5">
+                <div class="conversation-start">
+                    <span>Today, 6:28 AM</span>
+                </div>
+                <div class="bubble you">
+                    Wasup
+                </div>
+                <div class="bubble you">
+                    Wasup
+                </div>
+                <div class="bubble you">
+                    Wasup for the third time like is <br />you blind bitch
+                </div>
+
+            </div>
+            <div class="chat" data-chat="person6">
+                <div class="conversation-start">
+                    <span>Monday, 1:27 PM</span>
+                </div>
+                <div class="bubble you">
+                    So, how's your new phone?
+                </div>
+                <div class="bubble you">
+                    You finally have a smartphone :D
+                </div>
+                <div class="bubble me">
+                    Drake?
+                </div>
+                <div class="bubble me">
+                    Why aren't you answering?
+                </div>
+                <div class="bubble you">
+                    howdoyoudoaspace
+                </div>
+            </div>
+            <div class="write">
+                <a href="javascript:;" class="write-link attach"></a>
+                <input type="text" />
+                <a href="javascript:;" class="write-link smiley"></a>
+                <a href="javascript:;" class="write-link send"></a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+  document.querySelector(".chat[data-chat=person2]").classList.add("active-chat");
+document.querySelector(".person[data-chat=person2]").classList.add("active");
+
+let friends = {
+		list: document.querySelector("ul.people"),
+		all: document.querySelectorAll(".left .person"),
+		name: ""
+	},
+	chat = {
+		container: document.querySelector(".container .right"),
+		current: null,
+		person: null,
+		name: document.querySelector(".container .right .top .name")
+	};
+
+friends.all.forEach((f) => {
+	f.addEventListener("mousedown", () => {
+		f.classList.contains("active") || setAciveChat(f);
+	});
+});
+
+function setAciveChat(f) {
+	friends.list.querySelector(".active").classList.remove("active");
+	f.classList.add("active");
+	chat.current = chat.container.querySelector(".active-chat");
+	chat.person = f.getAttribute("data-chat");
+	chat.current.classList.remove("active-chat");
+	chat.container
+		.querySelector('[data-chat="' + chat.person + '"]')
+		.classList.add("active-chat");
+	friends.name = f.querySelector(".name").innerText;
+	chat.name.innerHTML = friends.name;
+}
+
+  </script>
+</x-app-layout>
+
+
+
+
+
+function fetchAndDisplayChattedUsers() {
+    const senderId = "{{ auth()->user()->id }}";
+    const senderRole = "Admin";
+
+    // Fetch the managers and clients with whom the admin has chatted
+    fetch(`/get-chatted-users/${senderId}/${senderRole}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log('Chatted users data:', data);
+
+            const chattedUsers = data.chattedUsers;
+            console.log('Chatted users:', chattedUsers);
+
+            onChildAdded(ref(db, "chat/"), (data) => {
+              if (data.val().recieverRol === "Admin" || data.val().Senderole === "Admin") {
+                     // Find the corresponding user based on recieverId or Senderole
+                      const userId = data.val().recieverRol === "Admin" ? data.val().Senderid : data.val().recieverId;                    
+                     const userRole = data.val().recieverRol === "Admin" ? data.val().Senderole : data.val().recieverRol;
+                    
+                      const user = chattedUsers.find(user => user.id === userId && user.role === userRole);
+
+
+                    // Check if the user is found
+                    if (user) {
+                      const chatsContainer = document.getElementById('chats');
+                        const newItem = document.createElement('a');
+                        newItem.setAttribute('data-manager-id', user.id);
+                        newItem.setAttribute('data-manager-role', user.role);
+                        newItem.classList.add('manager-item', 'flex', 'items-center', 'px-3', 'py-2', 'text-sm', 'transition', 'duration-150', 'ease-in-out', 'border-b', 'border-gray-300', 'cursor-pointer', 'hover:bg-gray-100', 'focus:outline-none');
+                        newItem.innerHTML = `
+                            <img class="object-cover w-10 h-10 rounded-full" src="https://cdn.pixabay.com/photo/2018/09/12/12/14/man-3672010__340.jpg" alt="username" />
+                            <div class="w-full pb-2">
+                                <div class="flex justify-between">
+                                    <span class="block ml-2 font-semibold text-black-600">${user.name} (${user.role})</span>
+                                    <span class="block ml-2 text-sm text-black-600">25 minutes</span>
+                                </div>
+                                <span class="block ml-2 text-sm text-black-600" id="lastMsg_${user.id}"></span>
+                            </div>
+                        `;
+                        chatsContainer.appendChild(newItem);
+                    }
+                }
+            });
+            
+        })
+        .catch(error => console.error('Error fetching chatted users:', error));
+
+// Use event delegation on the parent element (chatsContainer)
+document.getElementById('chats').addEventListener('click', function (event) {
+    if (event.target.classList.contains('manager-item')) {
+        const managerId = event.target.getAttribute('data-manager-id');
+        const managerRole = event.target.getAttribute('data-manager-role');
+        document.querySelectorAll('.manager-item').forEach(function (item) {
+            item.classList.remove('selected');
+        });
+        event.target.classList.add('selected');
+
+        // Update the chat window based on the selected manager
+        updateChat(managerId, managerRole);
+    }
+});
+}
+
+// Call the function to fetch and display chatted users when the script runs
+fetchAndDisplayChattedUsers();
+
+
+
+
+/-//22222222222222
+ function fetchAndDisplayChattedUsers() {
+    const senderId = "{{ auth()->user()->id }}";
+    const senderRole = "Admin";
+
+    // Fetch the managers and clients with whom the admin has chatted
+    fetch(`/get-chatted-users/${senderId}/${senderRole}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log('Chatted users data:', data);
+
+            const chattedUsers = Array.isArray(data.chattedUsers) ? data.chattedUsers : [];
+            console.log('Chatted users:', chattedUsers);
+
+            const chatsContainer = document.getElementById('chats');
+
+            // Function to fetch the last message for a given user
+            const fetchLastMessage = (userContainer, user) => {
+                const userMessagesRef = ref(db, 'chat/');
+                const userQuery = query(
+                    userMessagesRef,
+                    orderByChild('recieverId'),
+                    equalTo(user.id)
+                );
+
+                onChildAdded(userQuery, (messageData) => {
+                    const message = messageData.val();
+                    const lastMessageContainer = document.createElement('span');
+                    lastMessageContainer.classList.add('block', 'ml-2', 'text-sm', 'text-black-600');
+                    lastMessageContainer.textContent = `${message.text}`;
+                    userContainer.querySelector('.font-semibold').textContent = `${user.name} (${user.role})`;
+                    userContainer.querySelector('.text-sm').textContent = `${message.timestamp}`;
+                    userContainer.appendChild(lastMessageContainer);
+                });
+            };
+
+            chattedUsers.forEach(user => {
+                const userContainer = document.createElement('a');
+                userContainer.setAttribute('data-manager-id', user.id);
+                userContainer.setAttribute('data-manager-role', user.role);
+                userContainer.classList.add('manager-item', 'flex', 'items-center', 'px-3', 'py-2', 'text-sm', 'transition', 'duration-150', 'ease-in-out', 'border-b', 'border-gray-300', 'cursor-pointer', 'hover:bg-gray-100', 'focus:outline-none');
+
+                fetchLastMessage(userContainer, user);
+
+                userContainer.innerHTML = `
+                    <img class="object-cover w-10 h-10 rounded-full" src="https://cdn.pixabay.com/photo/2018/09/12/12/14/man-3672010__340.jpg" alt="username" />
+                    <div class="w-full pb-2">
+                        <div class="flex justify-between">
+                            <span class="block ml-2 font-semibold text-black-600"></span>
+                            <span class="block ml-2 text-sm text-black-600"></span>
+                        </div>
+                    </div>
+                `;
+
+                chatsContainer.appendChild(userContainer);
+            });
+        })
+        .catch(error => console.error('Error fetching chatted users:', error));
+}
+
+// Call the function to fetch and display chatted users when the script runs
+fetchAndDisplayChattedUsers();

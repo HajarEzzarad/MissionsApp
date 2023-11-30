@@ -13,10 +13,11 @@ use Illuminate\Support\Facades\Mail;
 
 class ManagersController extends Controller
 {
-    public function index()
+    
+    public function index(Request $request)
     {
+       
         $managers = Manager::all();
-        
         return view('managers.index', compact('managers'));
     }
 

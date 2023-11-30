@@ -27,6 +27,11 @@
             {{ __('Categories') }}
         </x-nav-link>
     </div>
+    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex mr-4">
+        <x-nav-link href="{{ route('chats.index') }}" :active="request()->routeIs('chats.*')">
+            {{ __('Chats') }}
+        </x-nav-link>
+    </div>
    
     
 </div>

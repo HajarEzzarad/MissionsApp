@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Manager;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,10 +23,8 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
+    // page home dashboard.2
     Route::get('/dashboard',[App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
-});
-
-Route::group(['middleware' => 'auth'], function () {
     //****Managers CRUD*/
     Route::resource('managers', \App\Http\Controllers\ManagersController::class);
     /***categories CRUD */
@@ -47,4 +46,18 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('unapproved-clients',[App\Http\Controllers\ClientsController::class,'ShowUnapprovedClients'])->name('unapproved-clients');
     //accept the clients pending
     Route::get('/accept-client/{id}',[App\Http\Controllers\ClientsController::class,'acceptClient'])->name('accept-client');
+    //**Chats */
+    /*Route::get('/chat', function () {
+        return view('chat.index');
+    });
+    Route::post('/send-message',[App\Http\Controllers\ChatController::class , 'sendMessage']);
+    Route::get('/get-messages',[App\Http\Controllers\ChatController::class , 'getMessages']);*/
+    Route::get('/chats', [\App\Http\Controllers\ChatController::class, 'index'])->name('chats.index');
+    Route::get('/get-chatted-users',  [\App\Http\Controllers\ChatController::class, 'getChattedUsers'])->name('get-chatted-users');
+
+
+
 });
+
+
+
