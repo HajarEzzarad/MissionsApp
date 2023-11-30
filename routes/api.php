@@ -26,6 +26,17 @@ Route::post('updateClient/{id}', [ClientsController::class, 'updateClient']);
 Route::post('loginM', [ManagersController::class, 'login']);
 Route::get('getCategorie', [CategoriesController::class, 'fetchCategories']);
 Route::get('/categories/{category}/missions', [MissiosnController::class, 'getMissionsByCategory']);
-
-
+Route::get('/categories/for-manager/{managerId}', [CategoriesController::class, 'categoriesForManager']);
+Route::post('/delete/{id}', [CategoriesController::class, 'deleteC']);
+Route::post('categories/add', [CategoriesController::class, 'addCategoryByManager']);
+Route::post('categories/update/{id}', [CategoriesController::class, 'updateCategory']);
+Route::post('missions/{id}', [MissiosnController::class, 'deleteMission']);
+Route::post('categories/{categoryId}/missions', [MissiosnController::class,'createMissionAPI']);
+Route::post('update/missions/{missionId}', [MissiosnController::class,'updateMission']);
+Route::get('/clients', [ClientsController::class, 'getClients']);
+Route::get('/managers', [ManagersController::class, 'getManagers']);
+Route::post('/getUserDetails', [ManagersController::class, 'getUserDetails']);
+Route::put('/missioncomplete/{clientId}', [ClientsController::class,'updateMissionComplete']);
+Route::get('/mission-history/{missionIds}',[ MissiosnController::class,'getMissionHistory']);
+Route::put('/update-mission-status', [ClientsController::class, 'updateMissionStatus']);
 

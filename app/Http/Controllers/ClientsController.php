@@ -145,7 +145,72 @@ class ClientsController extends Controller
     
         return response()->json(['message' => 'Client updated successfully']);
     }
+    public function getClients()
+    {
+        $users = Client::all();
+        
+
+        return response()->json($users);
+    }
+
+
+    public function updateMissionComplete(Request $request, $clientId)
+    {
+        $client = Client::find($clientId);
     
+        if (!$client) {
+            return response()->json(['error' => 'Client not found'], 404);
+        }
+    
+        $completedMissions = $request->input('missions');
+        $existingMissions = json_decode($client->missioncomplete, true) ?? [];
+        $existingMissions[] = $completedMissions;
+    
+        $client->missioncomplete = json_encode($existingMissions);
+    
+        $client->save();
+    
+        // Retrieve the updated client with the latest changes
+        $updatedClient = Client::find($clientId);
+    
+        return response()->json(['message' => 'Mission complete information updated successfully', 'client' => $updatedClient]);
+    }
+    
+     
+    public function updateMissionStatus(Request $request)
+    {
+        // Validate the incoming request
+        $request->validate([
+            'clientId' => 'required|exists:clients,id',
+            'missionId' => 'required',
+            'missionPrice'=>'required'
+        ]);
+
+        // Find the client
+        $client = Client::findOrFail($request->clientId);
+
+        // Get the current missioncomplete array
+        $missioncomplete = json_decode($client->missioncomplete, true) ?? [];
+
+        // Iterate through missioncomplete
+        foreach ($missioncomplete as &$mission) {
+            if ($mission['id'] == $request->missionId) {
+                // Update the status of the specified mission
+                $mission['status'] = 1;
+                break; // Stop iterating once the mission is found and updated
+            }
+        }
+
+        // Update the missioncomplete array in the client model
+        $client->missioncomplete = json_encode($missioncomplete);
+        $client->badge+=$request->missionPrice;
+        // Save the changes
+        $client->save();
+
+        // You can return a response here if needed
+        return response()->json(['message' => 'Mission status updated successfully']);
+    }
+   
 
     
     

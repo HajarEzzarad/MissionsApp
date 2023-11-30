@@ -48,19 +48,85 @@ class MissiosnController extends Controller
         $missions->save();
         return redirect()->back()->with('message','Mission Edited successufully');
     }
+
+    //apis ////////////////////////////////////////
     public function getMissionsByCategory($categoryId)
     {
         $missions = Mission::where('categorie_id', $categoryId)->get();
     
         return response()->json(['missions' => $missions]);
     }
-    
+    public function deleteMission($id)
+    {
+        try {
+            $mission = Mission::findOrFail($id);
+            $mission->delete();
 
+            return response()->json(['message' => 'Mission deleted successfully']);
+        } catch (\Exception $e) {
+            \Log::error('Error deleting mission: ' . $e->getMessage());
+
+            return response()->json(['error' => 'Error deleting mission', 'message' => $e->getMessage()], 500);
+        }
+    }
+    public function createMissionAPI(Request $request, $categoryId)
+    {
+        try {
+            $category = Categorie::findOrFail($categoryId);
+
+            $mission = $category->mission()->create([
+                'nom' => $request->input('nom'),
+                'prix' => $request->input('prix'),
+                'description' => $request->input('description'),
+                'link' => $request->input('link'),
+            ]);
+
+            return response()->json(['message' => 'Mission created successfully', 'mission' => $mission]);
+        } catch (\Exception $e) {
+            \Log::error('Error creating mission: ' . $e->getMessage());
+
+            return response()->json(['error' => 'Error creating mission', 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function updateMission(Request $request, $id)
+    {
+      try {
+        $mission = Mission::findOrFail($id);
+        
+        $mission->update([
+            'nom' => $request->input('nom'),
+            'prix' => $request->input('prix'),
+            'description' => $request->input('description'),
+            'link' => $request->input('link'),
+        ]);
+
+        return response()->json(['message' => 'Mission updated successfully', 'mission' => $mission]);
+       } catch (\Exception $e) {
+        \Log::error('Error updating mission: ' . $e->getMessage());
+
+        return response()->json(['error' => 'Error updating mission', 'message' => $e->getMessage()], 500);
+       }
+    }
+      
+    public function getMissionHistory($missionIds)
+{
+    $missionIdsArray = explode(',', $missionIds);
+
+    $missions = Mission::with(['category:id,nom'])
+        ->whereIn('id', $missionIdsArray)
+        ->get(['id', 'nom','prix','description' ,'link' ,'categorie_id as category_id']);
+
+    return response()->json(['missions' => $missions]);
+}
     
+    
+    ///////////////////////////////////////////////////////
+
+     
 
     public function destroy(Mission $mission)
     { 
-       
         $mission->delete();
         return redirect()->back()->with('message', 'the mission deleted!!');
     }
