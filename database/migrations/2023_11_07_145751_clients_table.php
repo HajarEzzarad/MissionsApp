@@ -30,6 +30,8 @@ return new class extends Migration
             $table->foreignId('current_team_id')->nullable();
             $table->timestamps();
             $table->decimal('badge', 8, 2)->nullable(); // Changing 'badge' to a decimal with 8 total digits and 2 decimal places
+            $table->decimal('credit', 8,2)->nullable();
+            $table->decimal('payer', 8,2)->nullable();
             $table->json('missioncomplete')->nullable();
         });
     }

@@ -86,6 +86,11 @@
                     <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">{{ $mission->nom}}</h5>
                 </a>
                 <p class="mb-3 font-normal text-gray-500 dark:text-gray-400">{{$mission->description}}</p>
+                @if ($mission->status == 0)
+                    <span style="color: red;">Mission Closed</span>
+                @else
+                    <span style="color: green;">Mission Open</span>
+                @endif
                 <div class="flex items-center">
                    <div class="text-sm">
                         <a href="{{ route('missions-show', $mission->id )}}" class="text-gray-900 font-semibold leading-none hover:text-indigo-600">

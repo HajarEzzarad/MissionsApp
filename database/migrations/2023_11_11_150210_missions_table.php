@@ -19,7 +19,8 @@ return new class extends Migration
             $table->string('link');
             $table->foreignId('categorie_id')->references('id')->on('categories')
             ->onDelete('cascade');
-
+            $table->boolean('status')->default(1)->nullable();
+            $table->integer('duration')->default(0);
             $table->timestamps();
         });
     }

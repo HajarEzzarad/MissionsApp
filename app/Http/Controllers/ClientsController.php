@@ -6,6 +6,7 @@ use App\Mail\AcceptingClient;
 use Illuminate\Http\Request;
 use Illuminate\Http\Request\UpdateUserRequest;
 use App\Models\Client;
+use App\Models\Mission;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -13,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Laravel\Jetstream\Jetstream;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Str;
-
+use Illuminate\Support\Facades\Mail;
 
 class ClientsController extends Controller
 {
@@ -47,6 +48,44 @@ class ClientsController extends Controller
         Mail::to($clients->email)->send(new AcceptingClient($clients,$passwordGenerate));
         return redirect()->route('unapproved-clients')->with('message','Client Accepted');
     }
+//complete missions for evreyclient
+
+public function toMissionsCompleted(Request $request, $userId)
+{
+    $client = Client::findOrFail($userId);
+    $missioncomplete = json_decode($client->missioncomplete, true) ?? [];
+
+    // Filter missions with status 0
+    $completedMissions = array_filter($missioncomplete, function ($mission) {
+        return isset($mission['status']) && $mission['status'] == 0;
+    });
+
+    $missionsCount = count($completedMissions);
+
+    return view('users.MissionsCompleted', compact('client', 'completedMissions', 'missionsCount'));
+}
+
+
+
+public function validateMissionsCompleted(Request $request, $userId,$missionId)
+{
+     $client = Client::findOrFail($userId);
+
+     $missioncomplete = json_decode($client->missioncomplete, true) ?? [];
+
+     // Iterate through missioncomplete
+     foreach ($missioncomplete as &$mission) {
+         if ($mission['id'] == $missionId) {
+             $mission['status'] = 1;
+             break; 
+         }
+     }
+     $mission = Mission::findOrFail($missionId);
+     $client->missioncomplete = json_encode($missioncomplete);
+     $client->badge+=$mission->prix;
+     $client->save();
+     return redirect()->back();
+}
 
     public function edit($id)
     {

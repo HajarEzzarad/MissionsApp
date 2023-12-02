@@ -46,12 +46,12 @@ Route::middleware([
     Route::get('unapproved-clients',[App\Http\Controllers\ClientsController::class,'ShowUnapprovedClients'])->name('unapproved-clients');
     //accept the clients pending
     Route::get('/accept-client/{id}',[App\Http\Controllers\ClientsController::class,'acceptClient'])->name('accept-client');
+    Route::get('/missions-completed/{userId}',[App\Http\Controllers\ClientsController::class,'toMissionsCompleted'])->name('missions-completed');
+    Route::post('/valide-missions-completed/{userId}/{missionId}',[App\Http\Controllers\ClientsController::class,'validateMissionsCompleted'])->name('valide-missions-completed');
+
+    
     //**Chats */
-    /*Route::get('/chat', function () {
-        return view('chat.index');
-    });
-    Route::post('/send-message',[App\Http\Controllers\ChatController::class , 'sendMessage']);
-    Route::get('/get-messages',[App\Http\Controllers\ChatController::class , 'getMessages']);*/
+
     Route::get('/chats', [\App\Http\Controllers\ChatController::class, 'index'])->name('chats.index');
     Route::get('/get-chatted-users',  [\App\Http\Controllers\ChatController::class, 'getChattedUsers'])->name('get-chatted-users');
 

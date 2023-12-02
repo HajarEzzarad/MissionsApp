@@ -42,6 +42,9 @@ class Client extends Authenticatable
         'CIN_verso_path',
         'RIB',
         'NomBanque',
+        'badge',
+        'credit',
+        'payer',
     ];
 
     /**

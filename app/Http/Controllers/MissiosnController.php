@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Categorie;
 use Illuminate\Http\Request;
 use App\Models\Mission;
+use Carbon\Carbon;
+
 
 class MissiosnController extends Controller
 {
@@ -26,6 +28,8 @@ class MissiosnController extends Controller
             'prix' =>$request->input('prix'),
             'description' =>$request->input('description'),
             'link' => $request->input('link'),
+            'duration' =>$request->input('duration'),
+            'created_at' => Carbon::now(),
 
         ]);
 
@@ -119,9 +123,6 @@ class MissiosnController extends Controller
 
     return response()->json(['missions' => $missions]);
 }
-    
-    
-    ///////////////////////////////////////////////////////
 
      
 

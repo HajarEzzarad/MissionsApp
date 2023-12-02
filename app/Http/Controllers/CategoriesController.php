@@ -50,6 +50,15 @@ class CategoriesController extends Controller
 
         //showing the missions in this category
         $missions = Mission::where('categorie_id', $category->id)->get();
+
+foreach ($missions as $mission) {
+    $timeToStop = $mission->calculateTimeToStop();
+
+    if (now()->gt($timeToStop) && $mission->status) {
+        $mission->status = false;
+        $mission->save();
+    }
+}
         //count the missions
         $missionsCount = Mission::where('categorie_id', $category->id)->count();
         //get the data of the category

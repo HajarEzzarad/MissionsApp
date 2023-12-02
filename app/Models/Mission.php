@@ -15,9 +15,17 @@ class Mission extends Model
         'prix',
         'description',
         'link',
+        'duration',
+        'status',
     ];
     public function category()
     {
         return $this->belongsTo(Categorie::class);
+    }
+    protected $dates = ['created_at', 'updated_at', 'time_to_stop'];
+
+    public function calculateTimeToStop()
+    {
+        return $this->created_at->addMinutes($this->duration);
     }
 }
