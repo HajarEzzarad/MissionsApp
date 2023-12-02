@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Manager;
+use App\Models\User;
+
 use App\Models\Client;
 
 use Illuminate\Http\Request;
@@ -111,19 +113,38 @@ class ManagersController extends Controller
         $managers->delete();
         return redirect()->route('managers.index');
     }
+    
+
+
+
     public function login(Request $request)
 {
-    $user = Manager::where('email', $request->email)->first();
+    // Check in Manager table
+    $manager = Manager::where('email', $request->email)->first();
+
+    if ($manager && $request->password === $manager->password) {
+        // Authentication successful for Manager
+        return response()->json([
+            'user' => $manager,
+            'role' => 'Manager',
+        ], 200);
+    }
+
+    // If not found in Manager table, check in User table
+    $user = User::where('email', $request->email)->first();
 
     if ($user && $request->password === $user->password) {
-        // Authentication successful
+        // Authentication successful for User
         return response()->json([
             'user' => $user,
+            'role' => 'Admin',
         ], 200);
-    } else {
-        return response()->json(['message' => 'Unauthorized'], 401);
     }
+
+    // If not found in either table, return Unauthorized
+    return response()->json(['message' => 'Unauthorized'], 401);
 }
+
 public function getManagers()
 {
     $users = Manager::all();

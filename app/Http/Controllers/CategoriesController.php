@@ -149,8 +149,14 @@ class CategoriesController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error updating category', 'message' => $e->getMessage()], 500);
         }
-    }
-
+    } 
+    
+    public function getManager($categoryId)
+{
+    $category = Categorie::with('managers')->find($categoryId);
+$managers = $category->managers;
+    return response()->json(['managers' => $managers]);
+}
     
     // CategoriesController.php
 

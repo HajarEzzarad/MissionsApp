@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\DB;
 
 use App\Mail\AcceptingClient;
 use Illuminate\Http\Request;
@@ -215,30 +216,45 @@ public function validateMissionsCompleted($userId, $missionId)
             'phone' => $request->phone,
             'pays' => $request->pays,
             'ville'=>$request->ville,
-            'password'=>bcrypt('rim123')
+            'password'=>bcrypt($request->password)
         ]);
 
         return response()->json(['message' => 'Client created successfully', 'client' => $client], 201);
     }
+   
     public function login(Request $request)
     {
-    $credentials = [
-        'email' => $request->email,
-    ];
-    $user = Client::where('email', $request->email)->first();
+        $credentials = [
+            'email' => $request->email,
+        ];
+    
+        $user = Client::where('email', $request->email)->first();
+    
+        if ($user && Hash::check($request->password, $user->password)) {
+            // Check if the user is approved
+            if ($user->approved) {
+                // Authentication successful
+                return response()->json([
+                    'user' => $user,
+                ], 200);
+            } else {
+                // User is not approved
+                return response()->json(['message' => 'Unauthorized. User not approved.'], 401);
+            }
+        } else {
+            // Authentication failed
+            if (!$user) {
+                // User with the given email not found
+                return response()->json(['message' => 'Unauthorized. User not found.'], 401);
+            } else {
+                // Incorrect password
+                return response()->json(['message' => 'Unauthorized. Incorrect password.'], 401);
+            }
+        }
+    }
+    
 
-    if ($user && Hash::check($request->password, $user->password)) {
-    // Authentication successful
-    return response()->json([
-        
-        'user' => $user,
-    ], 200);
-    }
 
-     else {
-        return response()->json(['message' => 'Unauthorized'], 401);
-    }
-    }
     public function updateClient(Request $request, $id)
     {
         $client = Client::find($id);
@@ -337,7 +353,39 @@ public function validateMissionsCompleted($userId, $missionId)
         // You can return a response here if needed
         return response()->json(['message' => 'Mission status updated successfully']);
     }
-   
+    
+    public function getClientsByMission($missionId)
+    {
+        // Modified query to use the LIKE operator with wildcards
+        $clients = Client::where('missioncomplete', 'like', '%"id":%' . $missionId . '%')->get();
+    
+        // Extract the complete_at property from the missioncomplete JSON for the specific mission ID
+        $clientsWithCompleteAt = $clients->map(function ($client) use ($missionId) {
+            $missionCompleteData = json_decode($client->missioncomplete, true);
+    
+            // Check if the missioncomplete field is valid JSON and contains the complete_at key
+            if ($missionCompleteData && is_array($missionCompleteData)) {
+                // Search for the specific mission ID in the missioncomplete array
+                foreach ($missionCompleteData as $missionData) {
+                    if (isset($missionData['id']) && $missionData['id'] == $missionId) {
+                        // Match found, set the complete_at property
+                        $client->complete_at = $missionData['complete_at'];
+                        return $client; // Exit the loop once a match is found
+                    }
+                }
+            }
+    
+            // Handle the case where the key is not present, JSON is invalid, or no match found
+            $client->complete_at = null;
+            return $client;
+        });
+    
+        return response()->json(['clients' => $clientsWithCompleteAt]);
+    }
+    
+    
+
+
 
     
     

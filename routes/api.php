@@ -40,4 +40,6 @@ Route::post('/getUserDetails', [ManagersController::class, 'getUserDetails']);
 Route::put('/missioncomplete/{clientId}', [ClientsController::class,'updateMissionComplete']);
 Route::get('/mission-history/{missionIds}',[ MissiosnController::class,'getMissionHistory']);
 Route::put('/update-mission-status', [ClientsController::class, 'updateMissionStatus']);
+Route::get('/category/{categoryId}/manager', [CategoriesController::class, 'getManager']);
+Route::get('/clients/by-mission/{missionId}', [ClientsController::class, 'getClientsByMission']);
 
