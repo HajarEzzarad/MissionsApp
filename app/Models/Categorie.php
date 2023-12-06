@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Categorie extends Model
 {
-    public $timestamps= false;
     public $table = 'categories';
     use HasFactory;
     protected $fillable = [

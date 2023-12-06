@@ -45,6 +45,7 @@ class Client extends Authenticatable
         'badge',
         'credit',
         'payer',
+        'missioncomplete',
     ];
 
     /**

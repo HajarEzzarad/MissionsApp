@@ -52,7 +52,7 @@
                          @endif
                         </div>
                         <div class="px-4 py-5 bg-white sm:p-6">
-                            <label for="duration" class="block font-medium text-sm text-gray-700">DURATION</label>
+                            <label for="duration" class="block font-medium text-sm text-gray-700">DURATION (in minutes)</label>
                             <input type="text" name="duration" id="link" class="form-input rounded-md shadow-sm mt-1 block w-full"
                                    value="{{ old('duration', '') }}" />
                                    @if ($errors->has('duration'))

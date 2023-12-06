@@ -14,6 +14,13 @@
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                        <div class="justify-end">
+                    @if ($mission->status == 0)
+                    <span class="text-xl p-1 font-semibold text-red-600 bg-gray-300 rounded">Closed</span>
+                @else
+                    <span class="text-xl p-1 font-semibold text-green-600 bg-gray-300 rounded">Open</span>
+                @endif
+</div>
                         <table class="min-w-full divide-y divide-gray-200 w-full">
                                 <tr class="border-b">
                                     <th scope="col" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -36,7 +43,7 @@
                                         Prix
                                     </th>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 bg-white divide-y divide-gray-200">
-                                       {{ $mission->prix }}
+                                       {{ $mission->prix }} DH
                                     </td>
                                 </tr>
                                 <tr class="border-b">
@@ -57,10 +64,39 @@
                                 </tr>
                                 <tr class="border-b">
                                     <th scope="col" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Clients 
+                                    </th>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 bg-white divide-y divide-gray-200">
+                                        <ul>
+                                      @foreach($clients as $client)
+                                        <li>{{ $client->nom}} {{ $client->prenom}}</li>
+                                    @endforeach
+                                        </ul>
+                                    </td>
+                                </tr>
+
+                                <tr class="border-b">
+                                    <th scope="col" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                       Duration
+                                    </th>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 bg-white divide-y divide-gray-200">
+                                    {{$mission->duration}} Min
+                                    </td>
+                                </tr>
+                                <tr class="border-b">
+                                    <th scope="col" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                        created at
                                     </th>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 bg-white divide-y divide-gray-200">
                                     {{$mission->created_at}}
+                                    </td>
+                                </tr>
+                                <tr class="border-b">
+                                    <th scope="col" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                       closed at
+                                    </th>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 bg-white divide-y divide-gray-200">
+                                    {{$timeToStop}}
                                     </td>
                                 </tr>
                             </table>

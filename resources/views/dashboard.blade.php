@@ -63,15 +63,7 @@
     <!--left side-->
     <div class="w-full md:w-2/3">
         <canvas id="chart"></canvas>
-    </div>
-    <!--right side-->
-    <div class="w-full md:w-1/3 p-4">
-        <h2 class="text-lg font-bold mb-2">Chart Information</h2>
-        <p class="text-gray-800">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla in nibh auctor, tincidunt tortor a, efficitur nibh. Sed auctor, sapien sed faucibus faucibus, velit elit sodales massa, vel suscipit orci quam vel velit.</p>
-    </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4"></script>
 <script>
     const ctx= document.getElementById('chart').getContext('2d');
     new Chart(ctx, {
@@ -92,6 +84,47 @@
 
     });
 </script>
+    </div>
+    <!--right side-->
+    <div class="w-full md:w-1/3 p-4">
+    <canvas id="missionsLineChart"></canvas>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4"></script>
+<script>
+    // Prepare data from PHP to JavaScript
+    var missionsData = @json($missionsByDay);
+
+    // Extract labels and data for Chart.js
+    var labels = Object.keys(missionsData);
+    var data = Object.values(missionsData);
+
+    // Create a line chart
+    var ctx2 = document.getElementById('missionsLineChart').getContext('2d');
+    var myChart = new Chart(ctx2, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Completed Missions',
+                data: data,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1,
+                fill: false
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+</div>
+</div>
+
+
+
 <style>
     .bg-05f26c {
     background-color: #05f26c;

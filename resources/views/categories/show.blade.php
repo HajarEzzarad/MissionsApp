@@ -82,15 +82,25 @@
         <div class="grid grid-cols-1 md:grid-cols-3 sm:grid-cols-2 p-4 gap-10">
           @foreach($missions as $mission)
         <div class="max-w-sm p-6 bg-witheborder border-gray-200 rounded-lg shadow bg-white">
-                <a href="#">
+                <a>
+                    <div class="flex items-center justify-between">
+                <div class=" justify-start">
                     <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">{{ $mission->nom}}</h5>
+                </div>
+                    <div class="justify-end">
+                    @if ($mission->status == 0)
+                    <span class=" p-1 font-semibold bg-red-600 w-4 text-white rounded">Closed</span>
+                @else
+                    <span class="w-4 p-1 font-semibold bg-green-600 text-white rounded">Open</span>
+                @endif
+</div>
+</div>
                 </a>
                 <p class="mb-3 font-normal text-gray-500 dark:text-gray-400">{{$mission->description}}</p>
-                @if ($mission->status == 0)
-                    <span style="color: red;">Mission Closed</span>
-                @else
-                    <span style="color: green;">Mission Open</span>
+                @if ($mission->status == 1)
+                <p class="mb-3 font-normal text-gray-500 dark:text-gray-400">Will closed at : {{ $timeToStop}}</p>
                 @endif
+               
                 <div class="flex items-center">
                    <div class="text-sm">
                         <a href="{{ route('missions-show', $mission->id )}}" class="text-gray-900 font-semibold leading-none hover:text-indigo-600">

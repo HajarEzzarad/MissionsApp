@@ -69,7 +69,8 @@ foreach ($missions as $mission) {
             'missions' => $missions,
             'category'=>$categories,
             'missionsCount' => $missionsCount,
-            'managersCount' => $managersCount,
+            'managersCount' => $managersCount, 
+            'timeToStop' => $timeToStop,
         ]);
     }
 

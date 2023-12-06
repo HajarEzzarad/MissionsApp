@@ -97,7 +97,7 @@
 
         </div>
     </div>
-<!-- ths script for search -->
+    
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script>
     $(document).ready(function () {
@@ -149,17 +149,26 @@
                                 '<tbody class="bg-white divide-y divide-gray-200">';
 
             results.forEach(function (manager) {
-                
-                resultHtml += '<tr>' +
-                                '<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">' + manager.id + '</td>' +
-                                '<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">' + manager.nom + '</td>' +
-                                '<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">' + manager.prenom + '</td>' +
-                                '<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">' + manager.email + '</td>' +
-                                '<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">' + manager.phone + '</td>' +
-                                '<td class="px-6 py-4 whitespace-nowrap text-sm font-medium">' +
-                                 
-                                '</td>' +
-                              '</tr>';
+                var showUrl = "{{ route('managers.show', ':id') }}".replace(':id', manager.id);
+    var editUrl = "{{ route('managers.edit', ':id') }}".replace(':id', manager.id);
+    var deleteUrl = "{{ route('managers.destroy', ':id') }}".replace(':id', manager.id);
+
+    resultHtml += '<tr>' +
+        '<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">' + manager.id + '</td>' +
+        '<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">' + manager.nom + '</td>' +
+        '<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">' + manager.prenom + '</td>' +
+        '<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">' + manager.email + '</td>' +
+        '<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">' + manager.phone + '</td>' +
+        '<td class="px-6 py-4 whitespace-nowrap text-sm font-medium">' +
+        '<a href="' + showUrl + '" class="text-blue-600 hover:text-blue-900 mb-2 mr-2">View</a>' +
+        '<a href="' + editUrl + '" class="text-indigo-600 hover:text-indigo-900 mb-2 mr-2">Edit</a>' +
+        '<form class="inline-block" action="' + deleteUrl + '" method="POST" onsubmit="return confirm(\'Are you sure?\');">' +
+        '<input type="hidden" name="_method" value="DELETE">' +
+        '<input type="hidden" name="_token" value="{{ csrf_token() }}">' +
+        '<input type="submit" class="text-red-600 hover:text-red-900 mb-2 mr-2" value="Delete">' +
+        '</form>' +
+        '</td>' +
+        '</tr>';
             });
 
             resultHtml += '</tbody></table>';

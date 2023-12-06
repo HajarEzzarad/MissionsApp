@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Mission extends Model
 {
-    public $timestamps= false;
+   
     public $table = 'missions';
     use HasFactory;
     protected $fillable = [
@@ -18,7 +18,7 @@ class Mission extends Model
         'duration',
         'status',
     ];
-    public function category()
+    public function category()  
     {
         return $this->belongsTo(Categorie::class);
     }

@@ -15,9 +15,52 @@ use Laravel\Jetstream\Jetstream;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class ClientsController extends Controller
 {
+    public function toPayement($userId)
+    {
+        $clients = Client::findOrFail($userId);
+        $missioncomplete = json_decode($clients->missioncomplete, true) ?? [];
+
+    // Filter missions with status 0
+    $completedMissions = array_filter($missioncomplete, function ($mission) {
+        return isset($mission['status']) && $mission['status'] == 0;
+    });
+
+  
+    $missionsCount = count($completedMissions);
+    $count = count($missioncomplete);
+    //
+
+    $completedCount = collect($missioncomplete)->where('status', 1)->count();
+    $totalMissions = count($missioncomplete);
+ $payments = Client::whereNotNull('payer')->get(['payer', 'created_at']);
+
+    $completionPercentage = $totalMissions > 0 ? ($completedCount / $totalMissions) * 100 : 0;
+    
+    $data = Client::select(
+        DB::raw('WEEK(created_at) as week'),
+        DB::raw('SUM(payer) as total_payer')
+    )
+    ->groupBy('week')
+    ->orderBy('week')
+    ->get();
+
+        return view('users.payement', compact('data','count','clients','missionsCount','completionPercentage','completedCount'));
+    }
+   
+
+ public function ajouterPayer(Request $request,$userId)
+ {
+    $client = Client::findOrFail($userId);
+    $client->payer =$request->input('payer');
+    $client->credit -= $client->payer;
+    $client->save();
+    return redirect()->back()->with('message','payer est ajouté');
+ }
     public function index()
     {
         //count the client that unprroved
@@ -67,25 +110,37 @@ public function toMissionsCompleted(Request $request, $userId)
 
 
 
-public function validateMissionsCompleted(Request $request, $userId,$missionId)
+public function validateMissionsCompleted(Request $request, $userId, $missionId)
 {
-     $client = Client::findOrFail($userId);
+    $client = Client::findOrFail($userId);
 
-     $missioncomplete = json_decode($client->missioncomplete, true) ?? [];
+    // Decode the missioncomplete JSON string
+    $missioncomplete = json_decode($client->missioncomplete, true) ?? [];
 
-     // Iterate through missioncomplete
-     foreach ($missioncomplete as &$mission) {
-         if ($mission['id'] == $missionId) {
-             $mission['status'] = 1;
-             break; 
-         }
-     }
-     $mission = Mission::findOrFail($missionId);
-     $client->missioncomplete = json_encode($missioncomplete);
-     $client->badge+=$mission->prix;
-     $client->save();
-     return redirect()->back();
+    // Iterate through missioncomplete
+    foreach ($missioncomplete as &$mission) {
+        if ($mission['id'] == $missionId) {
+            $mission['status'] = 1;
+            break;
+        }
+    }
+
+    // Encode the missioncomplete array back to JSON
+    $client->missioncomplete = json_encode($missioncomplete);
+
+    // Find the mission
+    $mission = Mission::findOrFail($missionId);
+
+    // Update the badge
+    $client->badge += $mission->prix;
+    $client->credit += $mission->prix;
+
+    // Save the client model
+    $client->save();
+
+    return redirect()->back();
 }
+
 
     public function edit($id)
     {

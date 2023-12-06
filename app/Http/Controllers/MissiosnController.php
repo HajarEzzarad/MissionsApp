@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Categorie;
 use Illuminate\Http\Request;
 use App\Models\Mission;
+use App\Models\Client;
 use Carbon\Carbon;
 
 
@@ -29,7 +30,7 @@ class MissiosnController extends Controller
             'description' =>$request->input('description'),
             'link' => $request->input('link'),
             'duration' =>$request->input('duration'),
-            'created_at' => Carbon::now(),
+        
 
         ]);
 
@@ -38,7 +39,9 @@ class MissiosnController extends Controller
 
     public function show(Mission $mission)
     {
-        return view('missions.show', compact('mission'));
+        $timeToStop = $mission->calculateTimeToStop();
+        $clients =Client::where('missioncomplete','like','%"id":%'.$mission->id. '%')->get();
+        return view('missions.show', compact('mission','clients','timeToStop'));
     }
     public function edit($id)
    {

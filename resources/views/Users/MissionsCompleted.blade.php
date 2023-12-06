@@ -30,7 +30,7 @@
                                        MISSION ID
                                     </th>
                                     <th scope="col" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        CATEGORIE ID
+                                        complete at
                                     </th>
                                     <th scope="col" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         STATUS
@@ -50,14 +50,14 @@
                                         </td>
 
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {{ $mission['category_id'] }}
+                                            {{ $mission['complete_at']}}
                                         </td>
 
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         {{ $mission['status'] == 0 ? 'Not validated' : 'validated' }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                        <a href="#" class="text-indigo-600 hover:text-indigo-900 mb-2 mr-2">Mission</a>
+                                        <a href="{{ route('missions-show', $mission['id'] )}}" class="text-indigo-600 hover:text-indigo-900 mb-2 mr-2">Show Mission</a>
                                         <form method="post" action="{{ route('valide-missions-completed', ['userId' => $client->id, 'missionId' => $mission['id']]) }}">
                                             @csrf
                                             @method('post')
