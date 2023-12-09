@@ -29,51 +29,50 @@
    
     </div>
     <div class="p-4 md:w-1/2 w-full">
-    <canvas id="dailyPayerChart" ></canvas>
+    <canvas id="lineChart" ></canvas>
                     </div>
 
 
                     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        // Prepare data from PHP to JavaScript
-        var dailyPayerData = @json($dailyPayerData);
+                    <script>
+            var dailyPayerData = @json($dailyPayerData);
 
-        // Extract labels (days) and data for Chart.js
-        var labels = Object.keys(dailyPayerData[clientId]);
+            // Extract labels (days) and data for Chart.js
+            var clientId = Object.keys(dailyPayerData)[0];
+            var labels = Object.keys(dailyPayerData[clientId]);
 
-        // Convert labels to a more readable format (e.g., December 2023)
-        labels = labels.map(function (label) {
-            var date = new Date(label);
-            var options = { month: 'long', day: 'numeric', year: 'numeric' };
-            return date.toLocaleDateString('en-US', options);
-        });
+            // Convert labels to a more readable format (e.g., December 2023)
+            labels = labels.map(function (label) {
+                var date = new Date(label);
+                var options = { month: 'long', day: 'numeric', year: 'numeric' };
+                return date.toLocaleDateString('en-US', options);
+            });
 
-        // Create a line chart for the specified client
-        var data = Object.values(dailyPayerData[clientId]);
+            // Create a line chart for the specified client
+            var data = Object.values(dailyPayerData[clientId]);
 
-        var ctx = document.getElementById('dailyPayerChart').getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Daily Payer - Client ID ' + clientId,
-                    data: data,
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1,
-                    fill: false
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
+            var ctx = document.getElementById('lineChart').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Sum of Payer Amount - Client ID ' + clientId,
+                        data: data,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1,
+                        fill: false
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
                     }
                 }
-            }
-        });
-    </script>
-
+            });
+        </script>
 
 
 
@@ -106,7 +105,7 @@
                 </h2>
             </div>
             <div class="p-4">
-                <p class="text-3xl font-bold text-gray-800">00 DH</p>
+                <p class="text-3xl font-bold text-gray-800">{{ $clients->badge - $clients->credit}} DH</p>
       
             </div>
 </div>

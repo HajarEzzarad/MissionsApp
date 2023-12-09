@@ -38,33 +38,36 @@ class ClientsController extends Controller
     
         $completionPercentage = $totalMissions > 0 ? ($completedCount / $totalMissions) * 100 : 0;
     
-      $dailyPayerData = [];
+   
 
-      foreach ($clients as $client) {
-          // Ensure $client is an object before trying to access properties
-          if (is_object($client)) {
-              $clientPayments = json_decode($client->payment, true) ?? [];
-              
-              $monthlyData = [];
-      
-              foreach ($clientPayments as $payment) {
-                  $paymentDate = Carbon::parse($payment['time_pay']);
-                  $dayKey = $paymentDate->format('Y-m-d');
-      
-                  if (!isset($monthlyData[$dayKey])) {
-                      $monthlyData[$dayKey] = 0;
-                  }
-      
-                  $monthlyData[$dayKey] += $payment['payer'];
-              }
-      
-              $dailyPayerData[$client->id] = $monthlyData;
-          }
+
+          $dailyPayerData = [];
+
+    foreach ($clients as $client) {
+        if (is_object($clients)) {
+            $clientPayments = json_decode($clients->payment, true) ?? [];
+
+            $monthlyData = [];
+
+            foreach ($clientPayments as $payment) {
+                $paymentDate = Carbon::parse($payment['time_pay']);
+
+                // Extract year and month from the payment date
+                $yearMonth = $paymentDate->format('Y-m');
+
+                // Add the payment amount to the monthly data for the corresponding year and month
+                if (!isset($monthlyData[$yearMonth])) {
+                    $monthlyData[$yearMonth] = 0;
+                }
+
+                $monthlyData[$yearMonth] += $payment['payer'];
+            }
+
+            $dailyPayerData[$clients->id] = $monthlyData;
         }
-
+    }
         return view('users.payement', compact('dailyPayerData', 'count', 'clients', 'missionsCount', 'completionPercentage', 'completedCount'));
-    
-}
+    }
     
     public function ajouterPayer(Request $request, $userId)
     {
