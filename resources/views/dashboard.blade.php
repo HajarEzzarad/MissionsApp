@@ -8,12 +8,12 @@
     </br>
     </br>
     <!--dashboard-->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
         <div class="bg-white rounded-lg shadow-lg overflow-hidden">
             <div class="bg-666df2 p-4">
                 <h2 class="text-lg font-bold text-white mb-2">
                     <i class="fas fa-users mr-2"></i>
-                    Total Users
+                    Clients Totaux
                 </h2>
             </div>
             <div class="p-4">
@@ -25,7 +25,7 @@
             <div class="bg-05f26c p-4">
                 <h2 class="text-lg font-bold text-white mb-2">
                     <i class="fas fa-users mr-2"></i>
-                    Total Managers
+                    Managers Totaux
                 </h2>
             </div>
             <div class="p-4">
@@ -37,23 +37,11 @@
             <div class="bg-yellow-500 p-4">
                 <h2 class="text-lg font-bold text-white mb-2">
                     <i class="fas fa-user-plus mr-2"></i>
-                    New Users
+                    Nouveaux Clients
                 </h2>
             </div>
             <div class="p-4">
                 <p class="text-3xl font-bold text-gray-800">{{ $newClientsCount }}</p>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-            <div class="bg-c9a0f2 p-4">
-                <h2 class="text-lg font-bold text-white mb-2">
-                    <i class="fas fa-dollar-sign mr-2"></i>
-                    Revenue
-                </h2>
-            </div>
-            <div class="p-4">
-                <p class="text-3xl font-bold text-gray-800">2</p>
             </div>
         </div>
     </div>
@@ -61,7 +49,7 @@
 
 <div class="container mx-auto p-4 flex flex-wrap">
     <!--left side-->
-    <div class="w-full md:w-2/3">
+    <div class="w-full md:w-1/2">
         <canvas id="chart"></canvas>
         <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4"></script>
 <script>
@@ -75,7 +63,7 @@
                     {{ $clientPersontage}}, 
                     {{ $managerPersontage}}
                 ],
-                    backgroundColor: ['blue','purple'],
+                    backgroundColor: ['blue','rgba(75, 192, 192, 0.2)'],
             }],
         },
         options:{
@@ -86,7 +74,7 @@
 </script>
     </div>
     <!--right side-->
-    <div class="w-full md:w-1/3 p-4">
+    <div class="w-full md:w-1/2 p-4">
     <canvas id="missionsLineChart"></canvas>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4"></script>
 <script>
@@ -104,9 +92,9 @@
         data: {
             labels: labels,
             datasets: [{
-                label: 'Completed Missions',
+                label: 'Missions accomplies',
                 data: data,
-                borderColor: 'rgba(75, 192, 192, 1)',
+                borderColor: 'yellow',
                 borderWidth: 1,
                 fill: false
             }]

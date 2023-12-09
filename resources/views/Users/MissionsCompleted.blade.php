@@ -9,15 +9,16 @@
         <div class="block mb-8">
         <div class="block mb-8">
                 <a href="{{ route('users.index') }}" class="text-purple font-bold py-2 px-4 rounded"><i class="fas fa-arrow-left"></i>Back</a>
-                <p class="text-purple-500 font-bold py-2 px-2 rounded">Client: {{ $client->nom }} {{ $client->prenom }}    ID: {{ $client->id }}</p>
-
+               
             </div>
             
                         </div>
                        
-                        <div class="flex items-center justify-end">
-    <p class="text-purple-900 font-bold py-2 px-2 rounded">{{ $missionsCount }}</p>
-    <i class="fas fa-check" style="color: purple;"></i>
+                        <div class="flex justify-end">
+                        <p class="text-black-500 font-bold py-2 px-2 rounded"><i class="fas fa-user" style="color: purple;"> </i> {{ $client->nom }} {{ $client->prenom }}</p>
+
+    <p class="text-black-900 font-bold py-2 px-2 rounded">{{ $missionsCount }}<i class="fas fa-check" style="color: purple;"></i></p>
+    
 </div>
             <div class="flex flex-col">
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -44,13 +45,19 @@
                                 <tbody class="bg-white divide-y divide-gray-200">
                                 @if(count($completedMissions) > 0)
                     @foreach($completedMissions as $mission)
+                    @php
+                    // Check if the mission still exists in the database
+                    $missionModel = \App\Models\Mission::find($mission['id']);
+                @endphp
+
+                @if($missionModel)
                                     <tr>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         {{ $mission['id'] }}
                                         </td>
 
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                            {{ $mission['complete_at']}}
+                                           {{ $formattedDates[$loop->index] }}
                                         </td>
 
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -61,14 +68,21 @@
                                         <form method="post" action="{{ route('valide-missions-completed', ['userId' => $client->id, 'missionId' => $mission['id']]) }}">
                                             @csrf
                                             @method('post')
-                                <button class="text-indigo-600 hover:text-indigo-900 mb-2 mr-2">Valider</button>
+                                <button class="text-green-600 hover:text-green-900 mb-2 mr-2">Valider</button>
                                             </form>
                                         </td>
                                     </tr>
-                                @endforeach
-                                @else
-                <p class="text-red-300">No completed missions found!!</p>
-            @endif
+                                    @else
+                    <tr>
+                        <td colspan="4" class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            The mission with ID {{ $mission['id'] }} has been deleted.
+                        </td>
+                    </tr>
+                @endif
+            @endforeach
+        @else
+            <p class="text-red-300">No completed missions found!!</p>
+        @endif
                                 </tbody>
                             </table>
                         </div>

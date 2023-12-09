@@ -30,6 +30,7 @@ class HomeController extends Controller
                  }
              }
             }
+            ksort($missionsByDay);
         //count the new clients
         $newClientsCount = Client::where('approved',true)->whereDate('created_at', '>=', now()->subDays(7))->count();
         //count the managers

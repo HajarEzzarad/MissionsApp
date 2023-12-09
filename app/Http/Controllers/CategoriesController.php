@@ -34,7 +34,7 @@ class CategoriesController extends Controller
 
         if($request->hasFile('icon_path')){
             $name= $request->file('icon_path')->getClientOriginalName();
-            $request->file('icon_path')->storeAs('public/category_photo', $name);
+            $request->file('icon_path')->storeAs('public/photos/category_photo', $name);
             $categories->icon_path= $name;
           
         }
@@ -50,15 +50,18 @@ class CategoriesController extends Controller
 
         //showing the missions in this category
         $missions = Mission::where('categorie_id', $category->id)->get();
-
-foreach ($missions as $mission) {
-    $timeToStop = $mission->calculateTimeToStop();
-
-    if (now()->gt($timeToStop) && $mission->status) {
-        $mission->status = false;
-        $mission->save();
-    }
-}
+        if (!$missions->isEmpty()) {
+            foreach ($missions as $mission) {
+                $timeToStop = $mission->calculateTimeToStop();
+        
+                if (now()->gt($timeToStop) && $mission->status) {
+                    $mission->status = false;
+                    $mission->save();
+                }
+            }
+        } else {
+            $timeToStop = "00-00-00 00:00:00";
+        }
         //count the missions
         $missionsCount = Mission::where('categorie_id', $category->id)->count();
         //get the data of the category
@@ -217,7 +220,7 @@ foreach ($missions as $mission) {
         $categories->nom= $request->input('nom');
         if($request->hasFile('icon_path')){
             $name= $request->file('icon_path')->getClientOriginalName();
-            $imagePath = $request->file('icon_path')->storeAs('public/category_photo', $name);
+            $imagePath = $request->file('icon_path')->storeAs('public/photos/category_photo', $name);
             $categories->icon_path= $imagePath;
         }
         $categories->save();

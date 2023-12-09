@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Edit Category
+            Modifier une Catgeorie
         </h2>
     </x-slot>
 
@@ -21,7 +21,7 @@
                          @endif
                         </div>
                         <div class="px-4 py-5 bg-white sm:p-6">
-                            <label for="icon_path" class="block font-medium text-sm text-gray-700">IMAGE</label>
+                            <label for="icon_path" class="block font-medium text-sm text-gray-700">ICON</label>
                             <input type="file" name="icon_path" id="icon_path" class="form-input rounded-md shadow-sm mt-1 block w-full" value="{{ $categories->icon_path}}" />
                                
                                    @if ($errors->has('icon_path'))
@@ -29,12 +29,12 @@
                          @endif
                         </div>
                         <div class="px-4 py-5 bg-white sm:p-6">
-                            <label for="add_manager" class="block font-medium text-sm text-gray-700">Add Managers :</label>
+                            <label for="add_manager" class="block font-medium text-sm text-gray-700">Ajouter Managers :</label>
                             <table class="min-w-full divide-y divide-gray-200 w-full">
                                 <thead>
                                 <tr>
                                     <th scope="col" width="50" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Nom
+                                        Nom de Manager
                                     </th>
                                     <th scope="col" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         
@@ -76,7 +76,7 @@
                             </table>
                         </div>
                         <div class="px-4 py-5 bg-white sm:p-6">
-                        <label for="add_manager" class="block font-medium text-sm text-gray-700">Current Managers :</label>
+                        <label for="add_manager" class="block font-medium text-sm text-gray-700">Actuel Managers :</label>
                         <table class="min-w-full divide-y divide-gray-200 w-full">
                                 <thead>
                                 <tr>
@@ -124,7 +124,7 @@
                         </div>
                         <div class="flex items-center justify-end px-4 py-3 bg-purple-50 text-right sm:px-6">
                             <button class="inline-flex items-center px-4 py-2 bg-purple-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-purple-700 active:bg-purple-900 focus:outline-none focus:border-purple-900 focus:shadow-outline-purple disabled:opacity-25 transition ease-in-out duration-150">
-                                Edit
+                                Modifier
                             </button>
                         </div>
                     </div>

@@ -16,9 +16,9 @@
                         <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                         <div class="justify-end">
                     @if ($mission->status == 0)
-                    <span class="text-xl p-1 font-semibold text-red-600 bg-gray-300 rounded">Closed</span>
+                    <span class="p-1 font-semibold bg-red-600 w-4 text-white rounded">Closed</span>
                 @else
-                    <span class="text-xl p-1 font-semibold text-green-600 bg-gray-300 rounded">Open</span>
+                    <span class="p-1 font-semibold bg-green-600 w-4 text-white rounded">Open</span>
                 @endif
 </div>
                         <table class="min-w-full divide-y divide-gray-200 w-full">

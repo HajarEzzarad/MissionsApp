@@ -40,7 +40,7 @@ class MissiosnController extends Controller
     public function show(Mission $mission)
     {
         $timeToStop = $mission->calculateTimeToStop();
-        $clients =Client::where('missioncomplete','like','%"id":%'.$mission->id. '%')->get();
+        $clients = Client::whereJsonContains('missioncomplete', ['id' => $mission->id])->get();
         return view('missions.show', compact('mission','clients','timeToStop'));
     }
     public function edit($id)

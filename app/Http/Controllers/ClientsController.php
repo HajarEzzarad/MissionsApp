@@ -24,43 +24,75 @@ class ClientsController extends Controller
     {
         $clients = Client::findOrFail($userId);
         $missioncomplete = json_decode($clients->missioncomplete, true) ?? [];
+       
 
-    // Filter missions with status 0
-    $completedMissions = array_filter($missioncomplete, function ($mission) {
-        return isset($mission['status']) && $mission['status'] == 0;
-    });
-
-  
-    $missionsCount = count($completedMissions);
-    $count = count($missioncomplete);
-    //
-
-    $completedCount = collect($missioncomplete)->where('status', 1)->count();
-    $totalMissions = count($missioncomplete);
- $payments = Client::whereNotNull('payer')->get(['payer', 'created_at']);
-
-    $completionPercentage = $totalMissions > 0 ? ($completedCount / $totalMissions) * 100 : 0;
+        // Filter missions with status 0
+        $completedMissions = array_filter($missioncomplete, function ($mission) {
+            return isset($mission['status']) && $mission['status'] == 0;
+        });
     
-    $data = Client::select(
-        DB::raw('WEEK(created_at) as week'),
-        DB::raw('SUM(payer) as total_payer')
-    )
-    ->groupBy('week')
-    ->orderBy('week')
-    ->get();
+        $missionsCount = count($completedMissions);
+        $count = count($missioncomplete);
+        $completedCount = collect($missioncomplete)->where('status', 1)->count();
+        $totalMissions = count($missioncomplete);
+    
+        $completionPercentage = $totalMissions > 0 ? ($completedCount / $totalMissions) * 100 : 0;
+    
+      $dailyPayerData = [];
 
-        return view('users.payement', compact('data','count','clients','missionsCount','completionPercentage','completedCount'));
-    }
+      foreach ($clients as $client) {
+          // Ensure $client is an object before trying to access properties
+          if (is_object($client)) {
+              $clientPayments = json_decode($client->payment, true) ?? [];
+              
+              $monthlyData = [];
+      
+              foreach ($clientPayments as $payment) {
+                  $paymentDate = Carbon::parse($payment['time_pay']);
+                  $dayKey = $paymentDate->format('Y-m-d');
+      
+                  if (!isset($monthlyData[$dayKey])) {
+                      $monthlyData[$dayKey] = 0;
+                  }
+      
+                  $monthlyData[$dayKey] += $payment['payer'];
+              }
+      
+              $dailyPayerData[$client->id] = $monthlyData;
+          }
+        }
+
+        return view('users.payement', compact('dailyPayerData', 'count', 'clients', 'missionsCount', 'completionPercentage', 'completedCount'));
+    
+}
+    
+    public function ajouterPayer(Request $request, $userId)
+    {
+        $client = Client::findOrFail($userId);
+        $payerAmount = $request->input('payer');
+    
+        if ($payerAmount > $client->credit) {
+            return redirect()->back()->with('error', 'Le montant payé est supérieur au crédit disponible.');
+        }
+ 
+        $client->credit -= $payerAmount;
+    
+        $paymentData = [
+            'payer' => $payerAmount,
+            'time_pay' => Carbon::now()->toDateString(), 
+        ];
+ 
+        $existingPayments = json_decode($client->payment, true) ?? [];
    
+        $existingPayments[] = $paymentData;
+        $client->payment = json_encode($existingPayments);
 
- public function ajouterPayer(Request $request,$userId)
- {
-    $client = Client::findOrFail($userId);
-    $client->payer =$request->input('payer');
-    $client->credit -= $client->payer;
-    $client->save();
-    return redirect()->back()->with('message','payer est ajouté');
- }
+        $client->save();
+    
+        return redirect()->back()->with('message', 'Payer est ajouté avec succès.');
+    }
+
+
     public function index()
     {
         //count the client that unprroved
@@ -88,10 +120,9 @@ class ClientsController extends Controller
         $clients->password= $passwordGenerate;
         $clients->approved = true;
         $clients->save();
-        Mail::to($clients->email)->send(new AcceptingClient($clients,$passwordGenerate));
-        return redirect()->route('unapproved-clients')->with('message','Client Accepted');
+     return redirect()->route('unapproved-clients')->with('message','Client Accepted');
     }
-//complete missions for evreyclient
+//complete missions for evrey client
 
 public function toMissionsCompleted(Request $request, $userId)
 {
@@ -103,21 +134,30 @@ public function toMissionsCompleted(Request $request, $userId)
         return isset($mission['status']) && $mission['status'] == 0;
     });
 
+    $formattedDates = [];
+    foreach ($completedMissions as $mission) {
+        $completeAt = $mission['complete_at'];
+        
+        // Parse the date using Carbon
+        $carbonDate = Carbon::parse($completeAt);
+        
+        // Format the date as per your requirement
+        $formattedDates[] = $carbonDate->format('Y-m-d H:i:s');
+    }
+
     $missionsCount = count($completedMissions);
 
-    return view('users.MissionsCompleted', compact('client', 'completedMissions', 'missionsCount'));
+    return view('users.MissionsCompleted', compact('client', 'completedMissions', 'missionsCount', 'formattedDates'));
 }
 
 
 
-public function validateMissionsCompleted(Request $request, $userId, $missionId)
+
+public function validateMissionsCompleted($userId, $missionId)
 {
     $client = Client::findOrFail($userId);
 
-    // Decode the missioncomplete JSON string
     $missioncomplete = json_decode($client->missioncomplete, true) ?? [];
-
-    // Iterate through missioncomplete
     foreach ($missioncomplete as &$mission) {
         if ($mission['id'] == $missionId) {
             $mission['status'] = 1;
@@ -125,17 +165,11 @@ public function validateMissionsCompleted(Request $request, $userId, $missionId)
         }
     }
 
-    // Encode the missioncomplete array back to JSON
     $client->missioncomplete = json_encode($missioncomplete);
 
-    // Find the mission
     $mission = Mission::findOrFail($missionId);
-
-    // Update the badge
     $client->badge += $mission->prix;
     $client->credit += $mission->prix;
-
-    // Save the client model
     $client->save();
 
     return redirect()->back();

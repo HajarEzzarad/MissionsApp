@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Payement
+            Payment
         </h2>
     </x-slot>
     <div>
@@ -29,40 +29,50 @@
    
     </div>
     <div class="p-4 md:w-1/2 w-full">
-    <canvas id="weeklyPayerChart" ></canvas>
+    <canvas id="dailyPayerChart" ></canvas>
                     </div>
-    <!--right side
-    <div class="w-full md:w-1/3 p-4">
-        <h2 class="text-lg font-bold mb-2">completed missions validated in %:  {{ $completionPercentage }}%</h2>
-        <canvas id="completionChart"></canvas>
-    </div>-->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    // Assuming completionPercentage is passed from the controller
-    var completionPercentage = {{ $completionPercentage }};
-    
-    var ctx = document.getElementById('completionChart').getContext('2d');
-    var myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Completed Missions validated'],
-            datasets: [{
-                data: [completionPercentage],
-                backgroundColor: ['rgba(160, 32, 240, 0.2)'],
-                borderColor: ['rgba(160, 32, 240, 1)'],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    max: 100
+
+
+                    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Prepare data from PHP to JavaScript
+        var dailyPayerData = @json($dailyPayerData);
+
+        // Extract labels (days) and data for Chart.js
+        var labels = Object.keys(dailyPayerData[clientId]);
+
+        // Convert labels to a more readable format (e.g., December 2023)
+        labels = labels.map(function (label) {
+            var date = new Date(label);
+            var options = { month: 'long', day: 'numeric', year: 'numeric' };
+            return date.toLocaleDateString('en-US', options);
+        });
+
+        // Create a line chart for the specified client
+        var data = Object.values(dailyPayerData[clientId]);
+
+        var ctx = document.getElementById('dailyPayerChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Daily Payer - Client ID ' + clientId,
+                    data: data,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                    fill: false
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
                 }
             }
-        }
-    });
-</script>
+        });
+    </script>
 
 
 
@@ -96,13 +106,11 @@
                 </h2>
             </div>
             <div class="p-4">
-            @if( $clients->payer == 0)
-                <p class="text-3xl font-bold text-gray-800">0 DH</p>
-                @else
-                <p class="text-3xl font-bold text-gray-800">{{ $clients->payer}} DH</p>
-                @endif
+                <p class="text-3xl font-bold text-gray-800">00 DH</p>
+      
             </div>
-        </div>
+</div>
+
          <!-- 1-->
          <div class="bg-white rounded-lg shadow-lg overflow-hidden">
             <div class="bg-05f26c p-4">
@@ -136,28 +144,12 @@
     @if(session('message'))
                 <div class="bg-green-500 text-white p-4">{{ session('message')}}</div>
                 @endif
-            <!--    <div class="bg-white  shadow-lg overflow-hidden">
-            <div class="bg-gray-700 p-4">
-                <h2 class="text-lg font-bold text-white mb-2">
-                    Bank Information
-                </h2>
-            </div>
-            <div class="p-4">
-                   <div class="flex justify-center">
-                   <label for="prix" class="flex font-medium text-sm text-gray-700"><i class="fas fa-pen mr-2"></i>RIB : </label>   
-                         <span class="flex font-medium text-sm text-gray-700"> {{ $clients->RIB}} </span>
-                   </div> 
-</br>
-                   <div class="flex justify-center">
-                   <label for="prix" class="flex font-medium text-sm text-gray-700"><i class="fas fa-building mr-2"></i>Bank Name : </label>   
-                         <span class="flex font-medium text-sm text-gray-700"> {{ $clients->NomBanque}} </span>
-                   </div> 
-          
-            </div>
-        </div>-->
+                @if(session('error'))
+                <div class="bg-red-500 text-white p-4">{{ session('error')}}</div>
+                @endif
               
             <div class="mt-5 md:mt-0 md:col-span-2">
-                <form method="post" action="{{ route('ajouter-payer', $clients->id) }}" enctype="multipart/form-data">
+                <form method="post" action="{{ route('users.ajouter-payer', $clients->id) }}" enctype="multipart/form-data">
                     @csrf
                         <div class="px-4 py-5 bg-white sm:p-6 justify-start">
                         <label for="payer" class="block font-medium text-sm text-gray-700"><i class="fas fa-dollar-sign mr-2"></i>PRIX DE PAYEMENT</label>
@@ -207,90 +199,6 @@
 </style>
 
 
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<!--<script>
-        // Prepare data from PHP to JavaScript
-        var chartData = @json($data);
-
-        // Extract labels and data for Chart.js
-        var labels = chartData.map(entry => entry.week);
-        var data = chartData.map(entry => entry.total_payer);
-
-        // Create a chart
-        var ctx = document.getElementById('weeklyPayerChart').getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Weekly Payer',
-                    data: data,
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    </script>-->
-
-
-    <script>
-        // Prepare data from PHP to JavaScript
-        var chartData = @json($data);
-
-        // Extract labels and data for Chart.js
-        var labels = [];
-        var data = [];
-
-        // Iterate over the weeks and populate labels and data arrays
-        for (var i = 1; i <= 52; i++) { // Assuming there are 52 weeks in a year
-            var weekData = chartData.find(entry => entry.week === i);
-
-            if (weekData) {
-                labels.push(i);
-                data.push(weekData.total_payer);
-            } else {
-                labels.push(i);
-                data.push(0);
-            }
-        }
-
-        // Create a chart
-        var ctx = document.getElementById('weeklyPayerChart').getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: 'line', // Set the chart type to 'line'
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Weekly Paid',
-                    data: data,
-                    backgroundColor: 'rgba(160, 32, 240, 0.2)',
-                    borderColor: 'rgba(160, 32, 240, 1)',
-                    borderWidth: 1,
-                    fill: false // Set fill to false for a line chart
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    </script>
 
 
 </x-app-layout>

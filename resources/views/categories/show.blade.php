@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-           Show Category
+           Affiche une categorie
         </h2>
     </x-slot>
     <div>
@@ -31,7 +31,7 @@
                                 </tr>
                                 <tr class="border-b">
                                     <th scope="col" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Number of Managers
+                                        Nombre de Managers
                                     </th>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 bg-white divide-y divide-gray-200">
                                        {{ $managersCount}}
@@ -51,7 +51,7 @@
                                 </tr>
                                 <tr class="border-b">
                                     <th scope="col" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Numbers of the missions
+                                        Nombre des missions
                                     </th>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 bg-white divide-y divide-gray-200">
                                        {{ $missionsCount }}
@@ -73,7 +73,7 @@
   <div class="max-w-6xl mx-auto py-10 sm:px-6 lg:px-8">
             <div class="block mb-8">
                             <button class="inline-flex items-center px-4 py-2 bg-purple-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-purple-700 active:bg-purple-900 focus:outline-none focus:border-purple-900 focus:shadow-outline-purple disabled:opacity-25 transition ease-in-out duration-150">
-                            <a href="{{ route('create-mission', $category->id)  }}">Add mission</a>
+                            <a href="{{ route('create-mission', $category->id)  }}">Ajouter une mission</a>
                             </button>
                         </div>
                         @if(session('message'))
@@ -89,16 +89,16 @@
                 </div>
                     <div class="justify-end">
                     @if ($mission->status == 0)
-                    <span class=" p-1 font-semibold bg-red-600 w-4 text-white rounded">Closed</span>
+                    <span class=" p-1 font-semibold bg-red-600 w-4 text-white rounded">Fermé</span>
                 @else
-                    <span class="w-4 p-1 font-semibold bg-green-600 text-white rounded">Open</span>
+                    <span class="w-4 p-1 font-semibold bg-green-600 text-white rounded">Ouvert</span>
                 @endif
 </div>
 </div>
                 </a>
                 <p class="mb-3 font-normal text-gray-500 dark:text-gray-400">{{$mission->description}}</p>
                 @if ($mission->status == 1)
-                <p class="mb-3 font-normal text-gray-500 dark:text-gray-400">Will closed at : {{ $timeToStop}}</p>
+                <p class="mb-3 font-normal text-gray-500 dark:text-gray-400">Sera fermé à : {{ $timeToStop}}</p>
                 @endif
                
                 <div class="flex items-center">

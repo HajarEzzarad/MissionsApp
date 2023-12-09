@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Users List
+            Clients List
         </h2>
     </x-slot>
     
@@ -15,7 +15,7 @@
 </div>
         <div class="block mb-8">
                             <button class="inline-flex items-center px-4 py-2 bg-red-300 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-400 active:bg-red-900 focus:outline-none focus:border-red-900 focus:shadow-outline-red disabled:opacity-25 transition ease-in-out duration-150">
-                            <a href="{{ route('unapproved-clients') }}">Clients Pending : {{ $unapprovedClientsCount}}</a>
+                            <a href="{{ route('users.unapproved-clients') }}">Clients Pending : {{ $unapprovedClientsCount}}</a>
                             </button>
                         </div>
             <div class="flex flex-col">
@@ -38,7 +38,10 @@
                                         Bank
                                     </th>
                                     <th scope="col" width="200" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Budge
+                                        Total
+                                    </th>
+                                    <th scope="col" width="200" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Credit
                                     </th>
                                     <th scope="col" width="200" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                        
@@ -67,14 +70,27 @@
                                         </td>
 
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                            {{ $user->badge}}
+                                            
+                                            @if( $user->badge == 0)
+                                              00.00
+                                             @else
+                                                {{ $user->badge}}
+                                             @endif
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                           
+                                            @if( $user->credit == 0)
+                                              00.00
+                                             @else
+                                             {{ $user->credit}}
+                                             @endif
                                         </td>
                                           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                           
                                           </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                        <a href="{{ route('payement-user', $user->id) }}" class="text-purple-800 hover:text-purple-900 mb-2 mr-2">Payer</a>
-                                        <a href="{{ route('missions-completed', $user->id) }}" class="text-green-800 hover:text-green-900 mb-2 mr-2">Validation</a>
+                                        <a href="{{ route('users.payement-user', $user->id) }}" class="text-purple-800 hover:text-purple-900 mb-2 mr-2">Payer</a>
+                                        <a href="{{ route('users.missions-completed', $user->id) }}" class="text-green-800 hover:text-green-900 mb-2 mr-2">Validation</a>
                                         <a href="{{ route('users.show', $user->id) }}" class="text-blue-600 hover:text-blue-900 mb-2 mr-2">View</a>
                                               <a href="{{ route('users.edit', $user->id) }}" class="text-indigo-600 hover:text-indigo-900 mb-2 mr-2">Edit</a>
                                            <form class="inline-block" action="{{ route('users.destroy', $user->id) }}" method="POST" onsubmit="return confirm('Are you sure?');">
@@ -142,8 +158,8 @@
                                 '<tbody class="bg-white divide-y divide-gray-200">';
 
             results.forEach(function (client) {
-                var validationUrl = "{{ route('missions-completed', ':id') }}".replace(':id', client.id);
-                var payerUrl = "{{ route('payement-user', ':id') }}".replace(':id', client.id);
+                var validationUrl = "{{ route('users.missions-completed', ':id') }}".replace(':id', client.id);
+                var payerUrl = "{{ route('users.payement-user', ':id') }}".replace(':id', client.id);
                 var showUrl = "{{ route('users.show', ':id') }}".replace(':id', client.id);
     var editUrl = "{{ route('users.edit', ':id') }}".replace(':id', client.id);
     var deleteUrl = "{{ route('users.destroy', ':id') }}".replace(':id', client.id);

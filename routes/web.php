@@ -43,13 +43,13 @@ Route::middleware([
     //CRUD clients
     Route::resource('users', \App\Http\Controllers\ClientsController::class);
     //showing unpproved clients
-    Route::get('unapproved-clients',[App\Http\Controllers\ClientsController::class,'ShowUnapprovedClients'])->name('unapproved-clients');
+    Route::get('unapproved-clients',[App\Http\Controllers\ClientsController::class,'ShowUnapprovedClients'])->name('users.unapproved-clients');
     //accept the clients pending
-    Route::get('/accept-client/{id}',[App\Http\Controllers\ClientsController::class,'acceptClient'])->name('accept-client');
-    Route::get('/missions-completed/{userId}',[App\Http\Controllers\ClientsController::class,'toMissionsCompleted'])->name('missions-completed');
+    Route::get('/accept-client/{id}',[App\Http\Controllers\ClientsController::class,'acceptClient'])->name('users.accept-client');
+    Route::get('/missions-completed/{userId}',[App\Http\Controllers\ClientsController::class,'toMissionsCompleted'])->name('users.missions-completed');
     Route::post('/valide-missions-completed/{userId}/{missionId}',[App\Http\Controllers\ClientsController::class,'validateMissionsCompleted'])->name('valide-missions-completed');
-    Route::get('/payement/{userId}',[App\Http\Controllers\ClientsController::class,'toPayement'])->name('payement-user');
-    Route::post('/ajouter-payer/{userId}',[App\Http\Controllers\ClientsController::class,'ajouterPayer'])->name('ajouter-payer');
+    Route::get('/payement/{userId}',[App\Http\Controllers\ClientsController::class,'toPayement'])->name('users.payement-user');
+    Route::post('/ajouter-payer/{userId}',[App\Http\Controllers\ClientsController::class,'ajouterPayer'])->name('users.ajouter-payer');
 
 
     
