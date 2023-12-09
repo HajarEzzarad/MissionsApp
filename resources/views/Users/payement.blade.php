@@ -8,7 +8,7 @@
         <div class="max-w-6xl mx-auto py-10 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between ">
         <div class="block mb-8 justify-end">
-                <a href="{{ route('users.index') }}" class="text-purple font-bold py-2 px-4 rounded"><i class="fas fa-arrow-left"></i>Back</a>
+                <a href="{{ route('users.index') }}" class="text-purple font-bold py-2 px-4 rounded"><i class="fas fa-arrow-left"></i>Retour</a>
             </div>
                        
                         <div class="justify-end">
@@ -22,10 +22,10 @@
                         <div class="container mx-auto p-4 flex flex-wrap">
     <!--left side-->
     <div class="w-100 md:w-1/2 border-b shadow rounded bg-green-50 p-12">
-    <p class="text-black-500 font-bold py-2 px-2 rounded"><i class="fas fa-user" style="color: green;"> user Name :</i> {{ $clients->nom }} {{ $clients->prenom }}</p>
+    <p class="text-black-500 font-bold py-2 px-2 rounded"><i class="fas fa-user" style="color: green;"> Nom de client :</i> {{ $clients->nom }} {{ $clients->prenom }}</p>
     <p class="text-black-500 font-bold py-2 px-2 rounded"><i class="fas fa-check" style="color: green;"></i> {{ $count}} completed missions</p>
     <p class="text-black-500 font-bold py-2 px-2 rounded"><i class="fas fa-pen" style="color: green;"> RIB :</i> {{ $clients->RIB}}</p>
-    <p class="text-black-500 font-bold py-2 px-2 rounded"><i class="fas fa-building" style="color: green;"> Bank Name :</i> {{ $clients->NomBanque}}</p>
+    <p class="text-black-500 font-bold py-2 px-2 rounded"><i class="fas fa-building" style="color: green;"> Nom de banque :</i> {{ $clients->NomBanque}}</p>
    
     </div>
     <div class="p-4 md:w-1/2 w-full">
@@ -44,7 +44,7 @@
             // Convert labels to a more readable format (e.g., December 2023)
             labels = labels.map(function (label) {
                 var date = new Date(label);
-                var options = { month: 'long', day: 'numeric', year: 'numeric' };
+                var options = { month: 'long', year: 'numeric' };
                 return date.toLocaleDateString('en-US', options);
             });
 
@@ -57,9 +57,10 @@
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Sum of Payer Amount - Client ID ' + clientId,
+                        label: 'Somme de Payement',
                         data: data,
-                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderColor: 'rgba(22,160, 133, 1)',
+                        backgroundColor: 'rgba(3, 201, 169, 1)',
                         borderWidth: 1,
                         fill: false
                     }]
@@ -85,7 +86,7 @@
             <div class="bg-yellow-300 p-4">
                 <h2 class="text-lg font-bold text-white mb-2">
                     <i class="fas fa-dollar-sign mr-2"></i>
-                    Total
+                    Totale
                 </h2>
             </div>
             <div class="p-4">
@@ -101,7 +102,7 @@
             <div class="bg-c9a0f2 p-4">
                 <h2 class="text-lg font-bold text-white mb-2">
                     <i class="fas fa-dollar-sign mr-2"></i>
-                    Paid
+                    Payé
                 </h2>
             </div>
             <div class="p-4">
@@ -115,7 +116,7 @@
             <div class="bg-05f26c p-4">
                 <h2 class="text-lg font-bold text-white mb-2">
                     <i class="fas fa-dollar-sign mr-2"></i>
-                    Credit
+                    Crédit
                 </h2>
             </div>
             <div class="p-4">
@@ -131,7 +132,7 @@
             <div class="bg-666df2 p-4">
                 <h2 class="text-lg font-bold text-white mb-2">
                     <i class="fas fa-check mr-2"></i>
-                    Total Missions Completed
+                    Totale des Missions Completé
                 </h2>
             </div>
             <div class="p-4">
@@ -158,7 +159,7 @@
                        
                         <div class="flex items-center justify-end px-4 py-3 bg-gray-50 text-right sm:px-6">
                             <button class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray disabled:opacity-25 transition ease-in-out duration-150">
-                                Add
+                                Ajouter
                             </button>
                         </div>
                     </div>

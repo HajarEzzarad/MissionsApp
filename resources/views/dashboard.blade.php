@@ -79,7 +79,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4"></script>
 <script>
     // Prepare data from PHP to JavaScript
-    var missionsData = @json($missionsByDay);
+    var missionsData = @json($missionsByMonth);
 
     // Extract labels and data for Chart.js
     var labels = Object.keys(missionsData);
@@ -94,7 +94,7 @@
             datasets: [{
                 label: 'Missions accomplies',
                 data: data,
-                borderColor: 'yellow',
+                borderColor: 'purple',
                 borderWidth: 1,
                 fill: false
             }]

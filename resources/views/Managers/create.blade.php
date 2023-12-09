@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Create Manager
+            Créer Manager
         </h2>
     </x-slot>
 
@@ -93,16 +93,9 @@
                                 <p class="text-sm text-red-600">{{ $errors->first('CIN_verso_path') }}</p>
                          @endif
                         </div>
-                        <div class="px-4 py-5 bg-white sm:p-6">
-                            <label for="password" class="block font-medium text-sm text-gray-700">Password</label>
-                            <input type="password" name="password" id="password" class="form-input rounded-md shadow-sm mt-1 block w-full" placeholder="The Password Will Generate auto" />
-                            @error('password')
-                                <p class="text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
                         <div class="flex items-center justify-end px-4 py-3 bg-purple-50 text-right sm:px-6">
                             <button class="inline-flex items-center px-4 py-2 bg-purple-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-purple-700 active:bg-purple-900 focus:outline-none focus:border-purple-900 focus:shadow-outline-purple disabled:opacity-25 transition ease-in-out duration-150">
-                                Create
+                                Créer
                             </button>
                         </div>
                     </div>

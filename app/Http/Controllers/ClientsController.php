@@ -37,11 +37,7 @@ class ClientsController extends Controller
         $totalMissions = count($missioncomplete);
     
         $completionPercentage = $totalMissions > 0 ? ($completedCount / $totalMissions) * 100 : 0;
-    
-   
-
-
-          $dailyPayerData = [];
+        $dailyPayerData = [];
 
     foreach ($clients as $client) {
         if (is_object($clients)) {

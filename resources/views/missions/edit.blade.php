@@ -1,14 +1,14 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Edit Mission
+            Modifier Mission
         </h2>
     </x-slot>
 
     <div>
         <div class="max-w-4xl mx-auto py-10 sm:px-6 lg:px-8">
         <div class="block mb-8">
-                <a href="{{ route('categories.show', $missions->categorie_id) }}" class="bg-purple-200 hover:bg-purple-300 text-black font-bold py-2 px-4 rounded">Back</a>
+                <a href="{{ route('categories.show', $missions->categorie_id) }}" class="bg-purple-200 hover:bg-purple-300 text-black font-bold py-2 px-4 rounded">Retour</a>
             </div>
              @if(session('message'))
                 <div class="bg-green-500 text-white p-4">{{ session('message')}}</div>
@@ -55,7 +55,7 @@
                         </div>
                         <div class="flex items-center justify-end px-4 py-3 bg-purple-50 text-right sm:px-6">
                             <button class="inline-flex items-center px-4 py-2 bg-purple-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-purple-700 active:bg-purple-900 focus:outline-none focus:border-purple-900 focus:shadow-outline-purple disabled:opacity-25 transition ease-in-out duration-150">
-                                Edit
+                                Submit
                             </button>
                         </div>
                     </div>

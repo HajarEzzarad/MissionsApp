@@ -14,23 +14,24 @@ class HomeController extends Controller
          // Retrieve data from the database
          $clients = Client::where('approved', true)->get();
 
-         // Process and aggregate the data
-         $missionsByDay = [];
- 
-         foreach ($clients as $client) {
-             $completemissions = json_decode($client->missioncomplete, true);
- 
-             foreach ($completemissions as $mission) {
-                 $completedDate = date('Y-m-d', strtotime($mission['complete_at']));
- 
-                 if (!isset($missionsByDay[$completedDate])) {
-                     $missionsByDay[$completedDate] = 1;
-                 } else {
-                     $missionsByDay[$completedDate]++;
-                 }
-             }
-            }
-            ksort($missionsByDay);
+         $missionsByMonth = [];
+
+foreach ($clients as $client) {
+    $completemissions = json_decode($client->missioncomplete, true);
+
+    foreach ($completemissions as $mission) {
+        $completedDate = date('Y-m', strtotime($mission['complete_at']));
+
+        if (!isset($missionsByMonth[$completedDate])) {
+            $missionsByMonth[$completedDate] = 1;
+        } else {
+            $missionsByMonth[$completedDate]++;
+        }
+    }
+}
+
+ksort($missionsByMonth);
+
         //count the new clients
         $newClientsCount = Client::where('approved',true)->whereDate('created_at', '>=', now()->subDays(7))->count();
         //count the managers
@@ -50,6 +51,6 @@ class HomeController extends Controller
          'newClientsCount' => $newClientsCount,
          'clientPersontage' => $clientPersontage,
          'managerPersontage' => $managerPersontage,
-        'missionsByDay'=> $missionsByDay]);
+        'missionsByMonth'=> $missionsByMonth]);
     }
 }
