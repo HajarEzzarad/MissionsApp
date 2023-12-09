@@ -170,7 +170,7 @@ public function getUserDetails(Request $request)
         'id' => $user->id,
         'name' => $user->nom,
         'prenom' => $user->prenom,
-        'profile' => $user->profile_photo_url,
+        'profile' => $user->profile_photo_path,
          'role'=>$role
         // Add any other fields you need
     ]);

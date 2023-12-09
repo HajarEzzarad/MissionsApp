@@ -40,6 +40,7 @@ class Client extends Authenticatable
         'ville',
         'CIN_recto_path',
         'CIN_verso_path',
+        'profile_photo_path',
         'RIB',
         'NomBanque',
         'badge',
@@ -74,9 +75,9 @@ class Client extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $appends = [
-        'profile_photo_url',
-    ];
+    // protected $appends = [
+    //     'profile_photo_path',
+    // ];
 
 
     public function getChatType()

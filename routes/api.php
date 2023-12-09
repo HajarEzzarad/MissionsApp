@@ -42,4 +42,11 @@ Route::get('/mission-history/{missionIds}',[ MissiosnController::class,'getMissi
 Route::put('/update-mission-status', [ClientsController::class, 'updateMissionStatus']);
 Route::get('/category/{categoryId}/manager', [CategoriesController::class, 'getManager']);
 Route::get('/clients/by-mission/{missionId}', [ClientsController::class, 'getClientsByMission']);
+Route::post('addPayer/{Id}', [ClientsController::class, 'AddPayer']);
+Route::get('getClientInfo/{Id}', [ClientsController::class, 'getClientInfo']);
+Route::post('updateClientInfo/{id}', [ClientsController::class, 'updateClientInfo']);
+Route::get('/user-mission-statistics/{clientId}', [ClientsController::class, 'getUserMissionStatistics']);
+Route::get('/client/{clientId}/payer-statistics', [ClientsController::class, 'getClientPayerStatistics']);
+Route::get('/getCategoryManagers/{categoryId}', [CategoriesController::class, 'getCategoryManagers']);
+Route::get('/getStatisticsPayer/{Id}', [ClientsController::class, 'getStatisticsPayer']);
 

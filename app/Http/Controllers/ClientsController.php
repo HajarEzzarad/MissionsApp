@@ -11,6 +11,7 @@ use App\Models\Mission;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 use Laravel\Jetstream\Jetstream;
 use Symfony\Component\HttpFoundation\Response;
@@ -204,9 +205,7 @@ public function validateMissionsCompleted($userId, $missionId)
             'phone' => 'required|string',
             'pays' => 'required|string',
             'ville' => 'required|string',
-            
         ]);
-        $request->merge(['password' => bcrypt($request->password)]);
 
         // $client = Client::create($request->all());
         $client = Client::create([
@@ -216,43 +215,44 @@ public function validateMissionsCompleted($userId, $missionId)
             'phone' => $request->phone,
             'pays' => $request->pays,
             'ville'=>$request->ville,
-            'password'=>bcrypt($request->password)
+            "password" => Hash::make($request->input('password')),
         ]);
 
         return response()->json(['message' => 'Client created successfully', 'client' => $client], 201);
     }
    
     public function login(Request $request)
-    {
-        $credentials = [
-            'email' => $request->email,
-        ];
-    
-        $user = Client::where('email', $request->email)->first();
-    
-        if ($user && Hash::check($request->password, $user->password)) {
-            // Check if the user is approved
-            if ($user->approved) {
+{
+    $credentials = [
+        'email' => $request->email,
+    ];
+
+    $user = Client::where('email', $request->email)->first();
+   
+    if ($user) {
+        // Check if the user is approved
+        if ($user->approved) {
+            // Check if the password is correct
+            if (Hash::check($request->password, $user->password)) {
                 // Authentication successful
+                
                 return response()->json([
                     'user' => $user,
                 ], 200);
             } else {
-                // User is not approved
-                return response()->json(['message' => 'Unauthorized. User not approved.'], 401);
+                // Incorrect password
+                return response()->json(['message' => 'Incorrect password',$user->password,Hash::make($request->password)], 401);
             }
         } else {
-            // Authentication failed
-            if (!$user) {
-                // User with the given email not found
-                return response()->json(['message' => 'Unauthorized. User not found.'], 401);
-            } else {
-                // Incorrect password
-                return response()->json(['message' => 'Unauthorized. Incorrect password.'], 401);
-            }
+            // User is not approved
+            return response()->json(['message' => 'User not approved'], 401);
         }
+    } else {
+        // User not found
+        return response()->json(['message' => 'User not found'], 401);
     }
-    
+}
+
 
 
     public function updateClient(Request $request, $id)
@@ -347,6 +347,7 @@ public function validateMissionsCompleted($userId, $missionId)
         // Update the missioncomplete array in the client model
         $client->missioncomplete = json_encode($missioncomplete);
         $client->badge+=$request->missionPrice;
+        $client->credit+=$request->missionPrice;
         // Save the changes
         $client->save();
 
@@ -382,14 +383,238 @@ public function validateMissionsCompleted($userId, $missionId)
     
         return response()->json(['clients' => $clientsWithCompleteAt]);
     }
+    public function AddPayer(Request $request, $Id)
+    {
+        $client = Client::find($Id);
+    
+        if (!$client) {
+            return response()->json(['error' => 'Client not found'], 404);
+        }
+    
+        // Ensure payer and credit are treated as decimals
+        $payerToAdd = (float)$request->input('payer');
+        $client->payer = bcadd($client->payer, $payerToAdd, 2); // bcadd for precise decimal arithmetic
+        $client->credit = bcsub($client->credit, $payerToAdd, 2);
+    
+        // Save changes to the database
+        $client->save();
+    
+        return response()->json(['message' => 'Ajouter avec succès'], 200);
+    }
     
     
+    public function getClientInfo($Id){
+        $client = Client::find($Id);
+    
+        if (!$client) {
+            return response()->json(['error' => 'Client not found'], 404);
+        }
+        return response()->json(['client' => $client]);
+
+    }
+     
+
+    public function updateClientInfo(Request $request, $id)
+    {
+        \Log::info('Received request data:', ['data' => $request->all()]);
+
+        $client = Client::find($id);
+        if (!$client) {
+            return response()->json(['error' => 'Client not found'], 404);
+        }
+    
+        try {
+            // Update client fields
+            
+            $client->email = $request->email;
+            $client->nom = $request->nom;
+            $client->prenom = $request->prenom;
+            $client->phone = $request->phone;
+            $client->pays = $request->pays;
+            $client->ville = $request->ville;
+            $client->RIB = $request->RIB;
+            $client->NomBanque = $request->NomBanque;
+          
+            if ($request->hasFile('profile_photo_path')) {
+                $image = $request->file('profile_photo_path');
+            
+                // Use the putFile method to store the file
+                $filename = time() . '_' . $image->getClientOriginalName();
+                $image->move(storage_path('app/public/profile_photo_path'), $filename);
+            
+                // Log the uploaded filename and path
+            
+                // Update the client's profile_photo_path with the filename
+                $client->profile_photo_path = $filename;
+            }
+    
+           
+            // Update other fields as needed
+            $client->save();
+    
+            return response()->json(['message' => 'Client updated successfully']);
+        } catch (\Exception $e) {
+            // Log the error for further investigation
+            \Log::error('Error updating client: ' . $e->getMessage());
+    
+            // Return a generic error response
+            return response()->json(['error' => 'An error occurred while updating the client.'], 500);
+        }
+    }
+    
+    public function getUserMissionStatistics($userId)
+    {
+        try {
+            // Fetch user's completed missions JSON column
+            $user = Client::findOrFail($userId);
+    
+            // Check if the completemission column exists and is not empty
+            if (!isset($user->missioncomplete) || empty($user->missioncomplete)) {
+                return response()->json(['error' => 'No completed missions for this user.']);
+            }
+    
+            // Decode the JSON data
+            $completedMissions = json_decode($user->missioncomplete, true);
+    
+            // Check if decoding was successful
+            if (json_last_error() != JSON_ERROR_NONE) {
+                return response()->json(['error' => 'Error decoding mission data.']);
+            }
+    
+            // Ensure that the decoded data is an array
+            if (!is_array($completedMissions)) {
+                return response()->json(['error' => 'Invalid mission data format.']);
+            }
+    
+            // Calculate mission completion statistics by week, month, and year
+            $missionStatistics = [
+                'week' => [],
+                'month' => [],
+                'year' => [],
+            ];
+    
+            foreach ($completedMissions as $mission) {
+                if (isset($mission['complete_at']) && is_string($mission['complete_at'])) {
+                    $completeDate = \Carbon\Carbon::parse($mission['complete_at']);
+    
+                    $weekKey =   $completeDate->isoWeek() . '-' . $completeDate->year;
+                    $monthKey = $completeDate->monthName . '-' . $completeDate->year;
+                    $yearKey = (string) $completeDate->year;
+    
+                    // Increment the mission count for the corresponding week, month, and year
+                    $missionStatistics['week'][$weekKey]['mission_count'] = isset($missionStatistics['week'][$weekKey]['mission_count']) ?
+                        $missionStatistics['week'][$weekKey]['mission_count'] + 1 : 1;
+    
+                    $missionStatistics['month'][$monthKey]['mission_count'] = isset($missionStatistics['month'][$monthKey]['mission_count']) ?
+                        $missionStatistics['month'][$monthKey]['mission_count'] + 1 : 1;
+    
+                    $missionStatistics['year'][$yearKey]['mission_count'] = isset($missionStatistics['year'][$yearKey]['mission_count']) ?
+                        $missionStatistics['year'][$yearKey]['mission_count'] + 1 : 1;
+                }
+            }
+    
+            return response()->json($missionStatistics);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()]);
+        }
+    }
+    
+//     public function getClientPayerStatistics($clientId)
+// {
+//     // Cumulative amount added to payer per day
+//     $dailyStatistics = DB::table('clients')
+//         ->select(
+//             DB::raw('DATE(created_at) as date'),
+//             DB::raw('SUM(payer) as cumulative_payer_amount')
+//         )
+//         ->where('id', $clientId)
+//         ->groupBy('date')
+//         ->orderBy('date', 'asc')
+//         ->get();
+
+//     // Cumulative amount added to payer per week
+//     $weeklyStatistics = DB::table('clients')
+//         ->select(
+//             DB::raw('WEEK(created_at) as week_number'),
+//             DB::raw('SUM(payer) as cumulative_payer_amount')
+//         )
+//         ->where('id', $clientId)
+//         ->groupBy('week_number')
+//         ->orderBy('week_number', 'asc')
+//         ->get();
+
+//     // Cumulative amount added to payer per month
+//     $monthlyStatistics = DB::table('clients')
+//         ->select(
+//             DB::raw('YEAR(created_at) as year_number'),
+//             DB::raw('MONTH(created_at) as month_number'),
+//             DB::raw('SUM(payer) as cumulative_payer_amount')
+//         )
+//         ->where('id', $clientId)
+//         ->groupBy('year_number', 'month_number')
+//         ->orderBy('year_number', 'asc')
+//         ->orderBy('month_number', 'asc')
+//         ->get();
+
+//     // Cumulative amount added to payer per year
+//     $yearlyStatistics = DB::table('clients')
+//         ->select(
+//             DB::raw('YEAR(created_at) as year_number'),
+//             DB::raw('SUM(payer) as cumulative_payer_amount')
+//         )
+//         ->where('id', $clientId)
+//         ->groupBy('year_number')
+//         ->orderBy('year_number', 'asc')
+//         ->get();
+
+//     return response()->json([
+//         'daily' => $dailyStatistics,
+//         'weekly' => $weeklyStatistics,
+//         'monthly' => $monthlyStatistics,
+//         'yearly' => $yearlyStatistics,
+//     ]);
+// }
+
+public function getStatisticsPayer($id)
+{
+    $client = Client::find($id);
+
+    if (!$client) {
+        return response()->json(['error' => 'Client not found'], 404);
+    }
+
+    $statistics = [
+        'daily'   => $this->getWinsByPeriod($client, 'day'),
+        'weekly'  => $this->getWinsByPeriod($client, 'week'),
+        'monthly' => $this->getWinsByPeriod($client, 'month'),
+        'yearly'  => $this->getWinsByPeriod($client, 'year'),
+    ];
+
+    return response()->json(['statistics' => $statistics]);
+}
+
+private function getWinsByPeriod($client, $period)
+{
+    $now = Carbon::now();
+
+    switch ($period) {
+        case 'day':
+            return $client->whereDate('created_at', $now->toDateString())->sum('payer');
+        case 'week':
+            return $client->whereBetween('created_at', [$now->startOfWeek(), $now->endOfWeek()])->sum('payer');
+        case 'month':
+            return $client->whereYear('created_at', $now->year)
+                          ->whereMonth('created_at', $now->month)
+                          ->sum('payer');
+        case 'year':
+            return $client->whereYear('created_at', $now->year)->sum('payer');
+        default:
+            return 0;
+    }
+}
 
 
 
-    
-    
-    
 
 }
 

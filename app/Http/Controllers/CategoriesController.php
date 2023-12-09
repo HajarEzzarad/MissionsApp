@@ -152,11 +152,26 @@ class CategoriesController extends Controller
     } 
     
     public function getManager($categoryId)
-{
-    $category = Categorie::with('managers')->find($categoryId);
-$managers = $category->managers;
-    return response()->json(['managers' => $managers]);
-}
+    {
+      $category = Categorie::with('managers')->find($categoryId);
+       $managers = $category->managers;
+        return response()->json(['managers' => $managers]);
+    }
+
+    public function getCategoryManagers($categoryId)
+    {
+        // Retrieve the category by its ID
+        $category = Categorie::find($categoryId);
+
+        if ($category) {
+            // Retrieve the managers associated with the category
+            $managers = $category->managers;
+
+            return response()->json(['managers' => $managers], 200);
+        }
+
+        return response()->json(['message' => 'Category not found or has no managers.'], 404);
+    }
     
     // CategoriesController.php
 
@@ -164,15 +179,25 @@ $managers = $category->managers;
     {
          try {
         // Get the manager ID from the request
-        $managerId = $request->input('manager_id');
+        $managerIds = $request->input('manager_ids');
+
+        // If it's not an array, use the single manager_id
+        if (!is_array($managerIds)) {
+            $managerIds = [$request->input('manager_id', null)];
+        }
+
+        // Filter out null values
+        $managerIds = array_filter($managerIds, function ($id) {
+            return $id !== null;
+        });
 
         // Find the manager
-        $manager = Manager::find($managerId);
+        // $manager = Manager::find($managerId);
 
         // Check if the manager exists
-        if (!$manager) {
-            return response()->json(['error' => 'Manager not found'], 404);
-        }
+        // if (!$manager) {
+        //     return response()->json(['error' => 'Manager not found'], 404);
+        // }
 
         // Validate the request data
         // $request->validate([
@@ -196,7 +221,14 @@ $managers = $category->managers;
         }
 
         // Save the category and associate it with the manager
-        $manager->category()->save($category);
+        foreach ($managerIds as $managerId) {
+            $manager = Manager::find($managerId);
+
+            // Check if the manager exists
+            if ($manager) {
+                $manager->category()->save($category);
+            }
+        }
 
         return response()->json(['message' => 'Category added successfully'], 201);
      } catch (\Exception $e) {

@@ -21,6 +21,8 @@ return new class extends Migration
             $table->string('ville');
             $table->string('CIN_recto_path')->nullable();
             $table->string('CIN_verso_path')->nullable();
+            $table->string('profile_photo_path')->nullable();
+
             $table->string('NomBanque');
             $table->string('RIB');
             $table->timestamp('email_verified_at')->nullable();

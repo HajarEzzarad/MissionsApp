@@ -58,11 +58,24 @@ class MissiosnController extends Controller
 
     //apis ////////////////////////////////////////
     public function getMissionsByCategory($categoryId)
-    {
-        $missions = Mission::where('categorie_id', $categoryId)->get();
+{
+    // Get missions with the specified category
+    $missions = Mission::where('categorie_id', $categoryId)->get();
     
-        return response()->json(['missions' => $missions]);
+    // Check and update missions that have reached their end time
+    foreach ($missions as $mission) {
+        $timeToStop = $mission->calculateTimeToStop();
+    
+        if (now()->gt($timeToStop) && $mission->status) {
+            $mission->status = false;
+            $mission->save();
+        }
     }
+
+    // Return the updated missions
+    return response()->json(['missions' => $missions]);
+}
+
     public function deleteMission($id)
     {
         try {
@@ -86,6 +99,8 @@ class MissiosnController extends Controller
                 'prix' => $request->input('prix'),
                 'description' => $request->input('description'),
                 'link' => $request->input('link'),
+                'status'=>1,
+                'duration'=>$request->input('duration')
             ]);
 
             return response()->json(['message' => 'Mission created successfully', 'mission' => $mission]);

@@ -36,6 +36,7 @@ class Manager extends Authenticatable
         'ville',
         'CIN_recto_path',
         'CIN_verso_path',
+        'profile_photo_path',
         'RIB',
         'NomBanque',
     ];
@@ -66,9 +67,9 @@ class Manager extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $appends = [
-        'profile_photo_url',
-    ];
+    // protected $appends = [
+    //     'profile_photo_url',
+    // ];
     public function category()
     {
         return $this->belongsToMany(Categorie::class, 'category_manager');
