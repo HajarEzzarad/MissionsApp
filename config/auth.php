@@ -44,6 +44,14 @@ return [
             'driver' => 'token',
             'provider' => 'clients', // Adjust the provider if needed
         ],
+        'clients' => [
+            'driver' => 'session',
+            'provider' => 'clients',
+        ],
+        'managers' => [
+            'driver' => 'session',
+            'provider' => 'managers',
+        ],
     ],
 
     /*
@@ -68,11 +76,19 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'clients',
+        'clients' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Client::class,
+        ],
+        // 'managers' => [
+        //     'driver' => 'eloquent',
+        //     'model' => App\Models\Manager::class,
         // ],
+    //    'clients' => [
+    //         'driver' => 'database',
+    //         'table' => 'clients',
+    //     ],
+
     ],
 
     /*

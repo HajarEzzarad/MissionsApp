@@ -130,13 +130,13 @@ class CategoriesController extends Controller
             if ($request->hasFile('icon_path')) {
                 // Delete the existing image if it exists
                 if ($category->icon_path) {
-                    Storage::delete('public/category_images/' . $category->icon_path);
+                    Storage::delete('public/photos/category_images/' . $category->icon_path);
                 }
 
                 // Upload the new image
                 $image = $request->file('icon_path');
                 $imageName = time() . '.' . $image->getClientOriginalExtension();
-                $image->storeAs('public/category_images', $imageName);
+                $image->storeAs('public/photos/category_images', $imageName);
 
                 // Update the icon_path field
                 $category->icon_path = $imageName;
@@ -191,20 +191,7 @@ class CategoriesController extends Controller
             return $id !== null;
         });
 
-        // Find the manager
-        // $manager = Manager::find($managerId);
-
-        // Check if the manager exists
-        // if (!$manager) {
-        //     return response()->json(['error' => 'Manager not found'], 404);
-        // }
-
-        // Validate the request data
-        // $request->validate([
-        //     'nom' => 'required|string',
-        //     'icon_path' => 'required|string',
-        //     // Add other validation rules as needed
-        // ]);
+       
 
         // Create a new category
         $category = new Categorie([
@@ -216,7 +203,7 @@ class CategoriesController extends Controller
         if ($request->hasFile('icon_path')) {
             $image = $request->file('icon_path');
             $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->storeAs('public/category_images', $imageName);
+            $image->storeAs('public/photos/category_images', $imageName);
             $category->icon_path = $imageName;
         }
 

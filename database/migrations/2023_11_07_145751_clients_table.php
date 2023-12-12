@@ -34,6 +34,11 @@ return new class extends Migration
             $table->decimal('credit', 8,2)->nullable();
             $table->json('missioncomplete')->nullable();
             $table->json('payment')->nullable();
+            $table->json('user_code')->nullable();
+            $table->string('code')->unique()->nullable();
+            $table->decimal('win_code', 8,2)->nullable();
+
+
         });
     }
 

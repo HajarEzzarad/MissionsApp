@@ -179,5 +179,22 @@ public function getUserDetails(Request $request)
 }
 
 }
+public function getManagerDetails($id)
+{
+   
+
+    // Use the selected table to fetch user details
+    $user=Manager::where('id', $id)->first();
+
+    if ($user) {
+    return response()->json([
+      'Manager'  =>$user
+        // Add any other fields you need
+    ]);
+} else {
+    return response()->json(['error' => 'User not found'], 404);
+}
+
+}
 
 }

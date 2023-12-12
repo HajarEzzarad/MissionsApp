@@ -48,5 +48,6 @@ Route::post('updateClientInfo/{id}', [ClientsController::class, 'updateClientInf
 Route::get('/user-mission-statistics/{clientId}', [ClientsController::class, 'getUserMissionStatistics']);
 Route::get('/client/{clientId}/payer-statistics', [ClientsController::class, 'getClientPayerStatistics']);
 Route::get('/getCategoryManagers/{categoryId}', [CategoriesController::class, 'getCategoryManagers']);
-Route::get('/getStatisticsPayer/{Id}', [ClientsController::class, 'getStatisticsPayer']);
+Route::get('/getPayerStatistics/{Id}', [ClientsController::class, 'getPayerStatistics']);
 
+Route::get('/getManagerDetails/{id}', [ManagersController::class, 'getManagerDetails']);

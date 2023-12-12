@@ -17,8 +17,6 @@ use Laravel\Jetstream\Jetstream;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 
 class ClientsController extends Controller
 {
@@ -205,54 +203,65 @@ public function validateMissionsCompleted($userId, $missionId)
             'phone' => 'required|string',
             'pays' => 'required|string',
             'ville' => 'required|string',
+            'code' => 'string', // Assuming you pass win_code in the request
         ]);
-
-        // $client = Client::create($request->all());
+    
+        // Create the new client
         $client = Client::create([
             'nom' => $request->nom,
             'prenom' => $request->prenom,
             'email' => $request->email,
             'phone' => $request->phone,
             'pays' => $request->pays,
-            'ville'=>$request->ville,
+            'ville' => $request->ville,
             "password" => Hash::make($request->input('password')),
         ]);
-
+    
+        // Check if a win_code is provided
+        if ($request->has('code')) {
+            // Find the existing client with the provided code
+            $existingClient = Client::where('code', $request->code)->first();
+    
+            // If the existing client is found, update the total and user_code
+            if ($existingClient) {
+                $existingClient->badge += $existingClient->win_code; // Update the total (modify as per your needs)
+                $userCodes = $existingClient->user_code ?? [];
+                $userCodes[] = $client->id;
+                $existingClient->user_code = $userCodes;
+                $existingClient->save();
+            }
+        }
+    
         return response()->json(['message' => 'Client created successfully', 'client' => $client], 201);
     }
    
     public function login(Request $request)
-{
-    $credentials = [
+    {
+       $credentials = [
         'email' => $request->email,
-    ];
+      ];
+      $user = Client::where('email', $request->email)->first();
 
-    $user = Client::where('email', $request->email)->first();
-   
-    if ($user) {
-        // Check if the user is approved
-        if ($user->approved) {
-            // Check if the password is correct
-            if (Hash::check($request->password, $user->password)) {
-                // Authentication successful
-                
-                return response()->json([
-                    'user' => $user,
-                ], 200);
-            } else {
-                // Incorrect password
-                return response()->json(['message' => 'Incorrect password',$user->password,Hash::make($request->password)], 401);
-            }
-        } else {
-            // User is not approved
-            return response()->json(['message' => 'User not approved'], 401);
-        }
-    } else {
-        // User not found
-        return response()->json(['message' => 'User not found'], 401);
+      if ($user && Hash::check($request->password, $user->password)) {
+       // Authentication successful
+       if($user->approved){
+        return response()->json([
+
+            'user' => $user,
+          ], 200);
+       }
+       else {
+        return response()->json(['message' => 'user not approved'], 401);
+
+       }
+      
+      }
+
+     else {
+        return response()->json(['message' => 'Unauthorized'], 401);
+      }
     }
-}
-
+   
 
 
     public function updateClient(Request $request, $id)
@@ -270,7 +279,7 @@ public function validateMissionsCompleted($userId, $missionId)
         if ($request->hasFile('cin_recto')) {
             $image = $request->file('cin_recto');
             $filename = time() . '_' . $image->getClientOriginalName();
-            $image->storeAs('public/cin_images', $filename); // You may customize the storage path
+            $image->storeAs('public/photos/cin_images', $filename); // You may customize the storage path
             $client->cin_recto_path = $filename;
         }
     
@@ -278,7 +287,7 @@ public function validateMissionsCompleted($userId, $missionId)
         if ($request->hasFile('cin_verso')) {
             $image = $request->file('cin_verso');
             $filename = time() . '_' . $image->getClientOriginalName();
-            $image->storeAs('public/cin_images', $filename); // You may customize the storage path
+            $image->storeAs('public/photos/cin_images', $filename); // You may customize the storage path
             $client->cin_verso_path = $filename;
         }
     
@@ -391,9 +400,20 @@ public function validateMissionsCompleted($userId, $missionId)
             return response()->json(['error' => 'Client not found'], 404);
         }
     
-        // Ensure payer and credit are treated as decimals
+        // Get current payer value and timestamp
+        $currentPayer = json_decode($client->payment, true) ?? [];
         $payerToAdd = (float)$request->input('payer');
-        $client->payer = bcadd($client->payer, $payerToAdd, 2); // bcadd for precise decimal arithmetic
+        $timestamp = now()->toDateTimeString(); // Assuming you're using Laravel
+    
+        // Add new entry to payer JSON array
+        $currentPayer[] = [
+            'payer' => $payerToAdd,
+            'time_pay' => $timestamp,
+        ];
+
+        $client->payment = json_encode($currentPayer); // Convert array to JSON
+    
+        // Update credit column as needed
         $client->credit = bcsub($client->credit, $payerToAdd, 2);
     
         // Save changes to the database
@@ -401,6 +421,7 @@ public function validateMissionsCompleted($userId, $missionId)
     
         return response()->json(['message' => 'Ajouter avec succès'], 200);
     }
+    
     
     
     public function getClientInfo($Id){
@@ -518,102 +539,43 @@ public function validateMissionsCompleted($userId, $missionId)
             return response()->json(['error' => $e->getMessage()]);
         }
     }
-    
-//     public function getClientPayerStatistics($clientId)
-// {
-//     // Cumulative amount added to payer per day
-//     $dailyStatistics = DB::table('clients')
-//         ->select(
-//             DB::raw('DATE(created_at) as date'),
-//             DB::raw('SUM(payer) as cumulative_payer_amount')
-//         )
-//         ->where('id', $clientId)
-//         ->groupBy('date')
-//         ->orderBy('date', 'asc')
-//         ->get();
-
-//     // Cumulative amount added to payer per week
-//     $weeklyStatistics = DB::table('clients')
-//         ->select(
-//             DB::raw('WEEK(created_at) as week_number'),
-//             DB::raw('SUM(payer) as cumulative_payer_amount')
-//         )
-//         ->where('id', $clientId)
-//         ->groupBy('week_number')
-//         ->orderBy('week_number', 'asc')
-//         ->get();
-
-//     // Cumulative amount added to payer per month
-//     $monthlyStatistics = DB::table('clients')
-//         ->select(
-//             DB::raw('YEAR(created_at) as year_number'),
-//             DB::raw('MONTH(created_at) as month_number'),
-//             DB::raw('SUM(payer) as cumulative_payer_amount')
-//         )
-//         ->where('id', $clientId)
-//         ->groupBy('year_number', 'month_number')
-//         ->orderBy('year_number', 'asc')
-//         ->orderBy('month_number', 'asc')
-//         ->get();
-
-//     // Cumulative amount added to payer per year
-//     $yearlyStatistics = DB::table('clients')
-//         ->select(
-//             DB::raw('YEAR(created_at) as year_number'),
-//             DB::raw('SUM(payer) as cumulative_payer_amount')
-//         )
-//         ->where('id', $clientId)
-//         ->groupBy('year_number')
-//         ->orderBy('year_number', 'asc')
-//         ->get();
-
-//     return response()->json([
-//         'daily' => $dailyStatistics,
-//         'weekly' => $weeklyStatistics,
-//         'monthly' => $monthlyStatistics,
-//         'yearly' => $yearlyStatistics,
-//     ]);
-// }
-
-public function getStatisticsPayer($id)
+    public function getPayerStatistics($Id)
 {
-    $client = Client::find($id);
+    $client = Client::find($Id);
 
     if (!$client) {
         return response()->json(['error' => 'Client not found'], 404);
     }
 
+    $payerHistory = json_decode($client->payment, true) ?? [];
+
     $statistics = [
-        'daily'   => $this->getWinsByPeriod($client, 'day'),
-        'weekly'  => $this->getWinsByPeriod($client, 'week'),
-        'monthly' => $this->getWinsByPeriod($client, 'month'),
-        'yearly'  => $this->getWinsByPeriod($client, 'year'),
+        'week' => [],
+        'month' => [],
+        'year' => [],
     ];
 
-    return response()->json(['statistics' => $statistics]);
-}
+    foreach ($payerHistory as $entry) {
+        $entryTimestamp = Carbon::parse($entry['time_pay']);
+        $weekNumber = $entryTimestamp->weekOfYear;
+        $monthNumber = $entryTimestamp->month;
+        $yearNumber = $entryTimestamp->year;
 
-private function getWinsByPeriod($client, $period)
-{
-    $now = Carbon::now();
+        // Add the value to the corresponding week
+        $statistics['week'][$yearNumber][$weekNumber] = 
+            ($statistics['week'][$yearNumber][$weekNumber] ?? 0) + $entry['payer'];
 
-    switch ($period) {
-        case 'day':
-            return $client->whereDate('created_at', $now->toDateString())->sum('payer');
-        case 'week':
-            return $client->whereBetween('created_at', [$now->startOfWeek(), $now->endOfWeek()])->sum('payer');
-        case 'month':
-            return $client->whereYear('created_at', $now->year)
-                          ->whereMonth('created_at', $now->month)
-                          ->sum('payer');
-        case 'year':
-            return $client->whereYear('created_at', $now->year)->sum('payer');
-        default:
-            return 0;
+        // Add the value to the corresponding month
+        $statistics['month'][$yearNumber][$monthNumber] = 
+            ($statistics['month'][$yearNumber][$monthNumber] ?? 0) + $entry['payer'];
+
+        // Add the value to the corresponding year
+        $statistics['year'][$yearNumber] = 
+            ($statistics['year'][$yearNumber] ?? 0) + $entry['payer'];
     }
+
+    return response()->json($statistics, 200);
 }
-
-
 
 
 }

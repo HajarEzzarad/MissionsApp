@@ -47,6 +47,11 @@ class Client extends Authenticatable
         'credit',
         'missioncomplete',
         'payment',
+        'code',
+        'win_code',
+        'user_code',
+
+
     ];
 
     /**
