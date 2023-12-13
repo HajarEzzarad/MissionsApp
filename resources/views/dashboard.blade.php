@@ -17,7 +17,7 @@
                 </h2>
             </div>
             <div class="p-4">
-                <p class="text-3xl font-bold text-gray-800">{{ $ClientsCount}}</p>
+                <p class="text-3xl font-bold text-gray-800">{{ $clientsCount}}</p>
             </div>
         </div>
 
@@ -29,7 +29,7 @@
                 </h2>
             </div>
             <div class="p-4">
-                <p class="text-3xl font-bold text-gray-800">{{ $ManagersCount}}</p>
+                <p class="text-3xl font-bold text-gray-800">{{ $managersCount}}</p>
             </div>
         </div>
 
@@ -50,7 +50,7 @@
 <div class="container mx-auto p-4 flex flex-wrap">
     <!--left side-->
     <div class="w-full md:w-1/2">
-        <canvas id="chart"></canvas>
+        <canvas  id="chart"></canvas>
         <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4"></script>
 <script>
     const ctx= document.getElementById('chart').getContext('2d');
@@ -60,8 +60,8 @@
             labels: ['Clients', 'Managers'],
             datasets: [{
                 data: [  
-                    {{ $clientPersontage}}, 
-                    {{ $managerPersontage}}
+                    {{ $clientPercentage}}, 
+                    {{ $managerPercentage}}
                 ],
                     backgroundColor: ['blue','rgba(75, 192, 192, 0.2)'],
             }],
@@ -74,8 +74,10 @@
 </script>
     </div>
     <!--right side-->
-    <div class="w-full md:w-1/2 p-4">
-    <canvas id="missionsLineChart"></canvas>
+    <div class="w-full md:w-1/2 p-4 ">
+      
+    <canvas class="relative rounded-lg overflow-hidden bg-purple-50 p-6 shadow" id="missionsLineChart"></canvas>
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4"></script>
 <script>
     // Prepare data from PHP to JavaScript
@@ -94,6 +96,7 @@
             datasets: [{
                 label: 'Missions accomplies',
                 data: data,
+                backgroundColor: 'purple',
                 borderColor: 'purple',
                 borderWidth: 1,
                 fill: false
@@ -102,8 +105,8 @@
         options: {
             scales: {
                 y: {
-                    beginAtZero: true
-                }
+                    beginAtZero: true,
+                },
             }
         }
     });

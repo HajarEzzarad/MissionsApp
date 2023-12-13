@@ -50,6 +50,7 @@ Route::middleware([
     Route::post('/valide-missions-completed/{userId}/{missionId}',[App\Http\Controllers\ClientsController::class,'validateMissionsCompleted'])->name('valide-missions-completed');
     Route::get('/payement/{userId}',[App\Http\Controllers\ClientsController::class,'toPayement'])->name('users.payement-user');
     Route::post('/ajouter-payer/{userId}',[App\Http\Controllers\ClientsController::class,'ajouterPayer'])->name('users.ajouter-payer');
+    Route::post('/add-gains/{id}',[App\Http\Controllers\ClientsController::class,'addGains'])->name('users.add-gains');
 
 
     

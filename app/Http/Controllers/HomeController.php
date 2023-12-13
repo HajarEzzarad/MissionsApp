@@ -8,49 +8,49 @@ use App\Models\Manager;
 
 class HomeController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         // Count the clients
-        $ClientsCount = Client::where('approved',true)->count();
-         // Retrieve data from the database
-         $clients = Client::where('approved', true)->get();
+        $clientsCount = Client::where('approved', true)->count();
+    
+        // Retrieve data from the database
+        $clients = Client::where('approved', true)->get();
+    
+        $missionsByMonth = [];
+      
+    if ($clients && (is_array($clients) || is_object($clients))) {
+        foreach ($clients as $client) {
+            $completemissions = json_decode($client->missioncomplete, true);
 
-         $missionsByMonth = [];
+            // Check if $completemissions is not null and is an array
+            if ($completemissions && is_array($completemissions)) {
+                foreach ($completemissions as $mission) {
+                    $completedDate = date('Y-m', strtotime($mission['complete_at']));
 
-foreach ($clients as $client) {
-    $completemissions = json_decode($client->missioncomplete, true);
+                    $missionsByMonth[$completedDate] = ($missionsByMonth[$completedDate] ?? 0) + 1;
+                }
+            }
+        }
 
-    foreach ($completemissions as $mission) {
-        $completedDate = date('Y-m', strtotime($mission['complete_at']));
-
-        if (!isset($missionsByMonth[$completedDate])) {
-            $missionsByMonth[$completedDate] = 1;
+        ksort($missionsByMonth);
         } else {
-            $missionsByMonth[$completedDate]++;
+            $missionsByMonth = [];
         }
+    
+        $newClientsCount = Client::where('approved', true)->whereDate('created_at', '>=', now()->subDays(7))->count();
+        $managersCount = Manager::count();
+        $total = $clientsCount + $managersCount;
+    
+        $clientPercentage = ($clientsCount / $total) * 100;
+        $managerPercentage = ($managersCount / $total) * 100;
+    
+        return view('dashboard', [
+            'clientsCount' => $clientsCount,
+            'managersCount' => $managersCount,
+            'newClientsCount' => $newClientsCount,
+            'clientPercentage' => $clientPercentage,
+            'managerPercentage' => $managerPercentage,
+            'missionsByMonth' => $missionsByMonth
+        ]);
     }
-}
-
-ksort($missionsByMonth);
-
-        //count the new clients
-        $newClientsCount = Client::where('approved',true)->whereDate('created_at', '>=', now()->subDays(7))->count();
-        //count the managers
-        $ManagersCount = Manager::count();
-        //count the persontage of users and managers
-        if($ClientsCount == 0 and $ManagersCount == 0)
-        {
-            $total = 1;
-        }else{
-            $total = $ClientsCount + $ManagersCount;
-        }
-        
-        $clientPersontage = ($ClientsCount / $total) * 100;
-        $managerPersontage = ($ManagersCount / $total) * 100;
-        return view('dashboard', ['ClientsCount' => $ClientsCount, 
-        'ManagersCount' => $ManagersCount,
-         'newClientsCount' => $newClientsCount,
-         'clientPersontage' => $clientPersontage,
-         'managerPersontage' => $managerPersontage,
-        'missionsByMonth'=> $missionsByMonth]);
-    }
-}
+}    

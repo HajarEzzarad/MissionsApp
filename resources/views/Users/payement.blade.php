@@ -23,15 +23,14 @@
     <!--left side-->
     <div class="w-100 md:w-1/2 border-b shadow rounded bg-green-50 p-12">
     <p class="text-black-500 font-bold py-2 px-2 rounded"><i class="fas fa-user" style="color: green;"> Nom de client :</i> {{ $clients->nom }} {{ $clients->prenom }}</p>
-    <p class="text-black-500 font-bold py-2 px-2 rounded"><i class="fas fa-check" style="color: green;"></i> {{ $count}} completed missions</p>
+    <p class="text-black-500 font-bold py-2 px-2 rounded"><i class="fas fa-check" style="color: green;"></i> {{ $count}} completed missions  <a href="{{ route('users.missions-completed', $clients->id) }}" class="text-blue-700 underline">Vérifier</a></p>
     <p class="text-black-500 font-bold py-2 px-2 rounded"><i class="fas fa-pen" style="color: green;"> RIB :</i> {{ $clients->RIB}}</p>
     <p class="text-black-500 font-bold py-2 px-2 rounded"><i class="fas fa-building" style="color: green;"> Nom de banque :</i> {{ $clients->NomBanque}}</p>
    
     </div>
     <div class="p-4 md:w-1/2 w-full">
-    <canvas id="lineChart" ></canvas>
+    <canvas class="relative rounded-lg overflow-hidden bg-green-50 p-4 shadow" id="lineChart" ></canvas>
                     </div>
-
 
                     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
                     <script>
@@ -197,6 +196,7 @@
     background-color: #c9a0f2;
 }
 </style>
+
 
 
 

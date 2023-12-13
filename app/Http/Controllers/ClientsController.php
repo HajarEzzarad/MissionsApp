@@ -103,7 +103,18 @@ class ClientsController extends Controller
     public function show($id)
     {
         $user= Client::findOrFail($id);
-        return view('users.show', compact('user'));
+        $missioncomplete = json_decode($user->missioncomplete, true) ?? [];
+        $count = count($missioncomplete);
+        return view('users.show', compact('user','count'));
+    }
+
+    public function addGains(Request $request,$id)
+    {
+        $client=Client::findOrFail($id);
+        $gains= $request->input('gains');
+        $client->win_code= $gains;
+        $client->save();
+        return redirect()->back()->with('message','Gains ajout!');
     }
     public function ShowUnapprovedClients()
     {

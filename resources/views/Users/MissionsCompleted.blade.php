@@ -7,12 +7,9 @@
     <div>
         <div class="max-w-6xl mx-auto py-10 sm:px-6 lg:px-8">
         <div class="block mb-8">
-        <div class="block mb-8">
-                <a href="{{ route('users.index') }}" class="text-purple font-bold py-2 px-4 rounded"><i class="fas fa-arrow-left"></i>Retour</a>
-               
+            <div class="block mb-8">
+                <button onclick="goBack()" class="bg-purple-200 hover:bg-purple-300 text-black font-bold py-2 px-4 rounded">Retour</button>
             </div>
-            
-                        </div>
                        
                         <div class="flex justify-end">
                         <p class="text-black-500 font-bold py-2 px-2 rounded"><i class="fas fa-user" style="color: purple;"> </i> {{ $client->nom }} {{ $client->prenom }}</p>
@@ -92,4 +89,10 @@
 
         </div>
     </div>
+
+    <script>
+      function goBack(){
+        window.history.back();
+      }
+    </script>
 </x-app-layout>

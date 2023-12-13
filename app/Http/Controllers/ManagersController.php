@@ -53,13 +53,13 @@ class ManagersController extends Controller
 
         if($request->hasFile('CIN_recto_path')){
              $name= $request->file('CIN_recto_path')->getClientOriginalName();
-            $request->file('CIN_recto_path')->storeAs('public/CIN_photo', $name);
+            $request->file('CIN_recto_path')->storeAs('public/photos/cin_images', $name);
             $managers->CIN_recto_path= $name;
         }
         
         if($request->hasFile('CIN_verso_path')){
             $name= $request->file('CIN_verso_path')->getClientOriginalName();
-            $request->file('CIN_verso_path')->storeAs('public/CIN_photo', $name);
+            $request->file('CIN_verso_path')->storeAs('public/photos/cin_images', $name);
             $managers->CIN_verso_path= $name;
         }
         $managers->save();
@@ -94,13 +94,13 @@ class ManagersController extends Controller
         $managers->NomBanque = $request->input('NomBanque');
         if($request->hasFile('CIN_recto_path')){
             $name= $request->file('CIN_recto_path')->getClientOriginalName();
-            $request->file('CIN_recto_path')->storeAs('public/CIN_photo', $name);
+            $request->file('CIN_recto_path')->storeAs('public/photos/cin_images', $name);
             $managers->CIN_recto_path= $name;
            }
            
            if($request->hasFile('CIN_verso_path')){
                $name= $request->file('CIN_verso_path')->getClientOriginalName();
-               $request->file('CIN_verso_path')->storeAs('public/CIN_photo', $name);
+               $request->file('CIN_verso_path')->storeAs('public/photos/cin_images', $name);
                $managers->CIN_verso_path= $name;
            }
         $managers->save();
