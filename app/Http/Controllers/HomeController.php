@@ -41,8 +41,14 @@ class HomeController extends Controller
         $managersCount = Manager::count();
         $total = $clientsCount + $managersCount;
     
-        $clientPercentage = ($clientsCount / $total) * 100;
-        $managerPercentage = ($managersCount / $total) * 100;
+       
+if ($total != 0) {
+    $clientPercentage = ($clientsCount / $total) * 100;
+    $managerPercentage = ($managersCount / $total) * 100;
+} else {
+    $clientPercentage =0; 
+$managerPercentage=0;
+}
     
         return view('dashboard', [
             'clientsCount' => $clientsCount,
