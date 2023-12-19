@@ -124,10 +124,7 @@ class ClientsController extends Controller
     }
     public function acceptClient($id)
     {
-        //generate a random password
-         $passwordGenerate = Str::random(6);
         $clients = Client::find($id);
-        $clients->password= $passwordGenerate;
         $clients->approved = true;
         $clients->save();
      return redirect()->route('users.unapproved-clients')->with('message','Client Accepted');
