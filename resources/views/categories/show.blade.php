@@ -96,7 +96,6 @@
 </div>
 </div>
                 </a>
-                <p class="mb-3 font-normal text-gray-500 dark:text-gray-400">{{$mission->description}}</p>
                 @if ($mission->status == 1)
     <?php 
         $timeToStop = $mission->calculateTimeToStop(); 

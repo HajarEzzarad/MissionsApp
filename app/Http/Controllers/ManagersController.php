@@ -36,9 +36,19 @@ class ManagersController extends Controller
          $passwordGenerate = Str::random(6);
          
         //upload CIN scané
-        $request->validate(['CIN_recto_path'=>'required|image|mimes:jpeg,png,jpg|max:2048',]);
-        $request->validate(['CIN_verso_path'=>'required|image|mimes:jpeg,png,jpg|max:2048',]);
-
+        $request->validate([
+            'CIN_recto_path' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'CIN_verso_path' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'nom' => 'required',
+            'prenom' => 'required',
+            'phone' => 'required',
+            'email' => 'required|unique:managers,email',
+            'pays' => 'required',
+            'ville' => 'required',
+            'RIB' => 'required',
+            'NomBanque' => 'required',
+        ]);
+        
         //create manager
         $managers=new Manager;
             $managers->password = $passwordGenerate;
@@ -110,6 +120,7 @@ class ManagersController extends Controller
     public function destroy($id)
     { 
         $managers= Manager::findOrFail($id);
+        $managers->category()->detach();
         $managers->delete();
         return redirect()->route('managers.index');
     }

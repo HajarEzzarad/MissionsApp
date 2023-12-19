@@ -1,7 +1,8 @@
 <x-guest-layout>
     <x-authentication-card>
         <x-slot name="logo">
-            <x-authentication-card-logo />
+        <h3 class="font-semibold text-xl text-purple-800 leading-tight">WeCash APP</h3>
+       
         </x-slot>
 
         <x-validation-errors class="mb-4" />
