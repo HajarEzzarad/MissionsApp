@@ -22,7 +22,7 @@ class HomeController extends Controller
         foreach ($clients as $client) {
             $completemissions = json_decode($client->missioncomplete, true);
 
-            // Check if $completemissions is not null and is an array
+           
             if ($completemissions && is_array($completemissions)) {
                 foreach ($completemissions as $mission) {
                     $completedDate = date('Y-m', strtotime($mission['complete_at']));
@@ -41,8 +41,14 @@ class HomeController extends Controller
         $managersCount = Manager::count();
         $total = $clientsCount + $managersCount;
     
-        $clientPercentage = ($clientsCount / $total) * 100;
+       if($total != 0)
+{
+	 $clientPercentage = ($clientsCount / $total) * 100;
         $managerPercentage = ($managersCount / $total) * 100;
+}else{
+	$clientPercentage = 0;
+	$managerPercentage = 0;
+}
     
         return view('dashboard', [
             'clientsCount' => $clientsCount,

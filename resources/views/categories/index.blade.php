@@ -15,7 +15,7 @@
         <div class="grid grid-cols-1 md:grid-cols-3 sm:grid-cols-2 gap-10">
             @foreach($categories as $categorie)
         <div class="max-w-sm p-6 bg-witheborder border-gray-200 rounded-lg shadow bg-white">
-        <img src="{{ asset('storage/photos/category_photo/'.$categorie->icon_path)}}" class="h-8 w-10" alt="">
+        <img src="{{ asset('storage/photos/category_images/'.$categorie->icon_path)}}" class="h-8 w-10" alt="">
                 <a>
                     <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">{{ $categorie->nom}}</h5>
                 </a>

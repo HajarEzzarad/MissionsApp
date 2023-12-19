@@ -130,7 +130,7 @@ class ClientsController extends Controller
         $clients->password= $passwordGenerate;
         $clients->approved = true;
         $clients->save();
-     return redirect()->route('unapproved-clients')->with('message','Client Accepted');
+     return redirect()->route('users.unapproved-clients')->with('message','Client Accepted');
     }
 //complete missions for evrey client
 

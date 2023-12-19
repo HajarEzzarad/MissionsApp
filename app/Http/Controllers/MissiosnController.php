@@ -22,20 +22,27 @@ class MissiosnController extends Controller
     }
 
     public function store(Request $request, Categorie $category)
-    {
-        
-        $category->mission()->create([
-            'nom' =>$request->input('nom'),
-            'prix' =>$request->input('prix'),
-            'description' =>$request->input('description'),
-            'link' => $request->input('link'),
-            'duration' =>$request->input('duration'),
-        
+{
+    
+    $request->validate([
+        'nom' => 'required',
+        'prix' => 'required|numeric',
+        'description' => 'required',
+        'link' => 'required',
+        'duration' => 'required|numeric',
+    ]);
 
-        ]);
+    $category->mission()->create([
+        'nom' => $request->input('nom'),
+        'prix' => $request->input('prix'),
+        'description' => $request->input('description'),
+        'link' => $request->input('link'),
+        'duration' => $request->input('duration'),
+    ]);
 
-        return redirect()->back()->with('message','Mission Created Succefully');
-    }
+    return redirect()->back()->with('message', 'Mission Created Successfully');
+}
+
 
     public function show(Mission $mission)
     {

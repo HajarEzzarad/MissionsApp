@@ -62,7 +62,7 @@
                                         ICON
                                     </th>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 bg-white divide-y divide-gray-200">
-                                    <img src="{{ asset('storage/category_photo/'.$category->icon_path)}}" class="h-20 w-50" alt="">
+                                    <img src="{{ asset('storage/photos/category_images/'.$category->icon_path)}}" class="h-20 w-50" alt="">
                                     </td>
                                 </tr>
                                 
@@ -98,8 +98,16 @@
                 </a>
                 <p class="mb-3 font-normal text-gray-500 dark:text-gray-400">{{$mission->description}}</p>
                 @if ($mission->status == 1)
-                <p class="mb-3 font-normal text-gray-500 dark:text-gray-400">Sera fermé à : {{ $timeToStop}}</p>
-                @endif
+    <?php 
+        $timeToStop = $mission->calculateTimeToStop(); 
+
+        if (now()->gt($timeToStop)) {
+            $mission->update(['status' => false]);
+        }
+    ?>
+    <p class="mb-3 font-normal text-gray-500 dark:text-gray-400">Sera fermé à : {{ $timeToStop }}</p>
+@endif
+
                
                 <div class="flex items-center">
                    <div class="text-sm">
