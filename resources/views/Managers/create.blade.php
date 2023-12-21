@@ -46,7 +46,7 @@
                         <div class="px-4 py-5 bg-white sm:p-6">
     <label for="pays" class="block font-medium text-sm text-gray-700">PAYS</label>
     <select name="pays" id="pays" class="form-input rounded-md shadow-sm mt-1 block w-full p-2" onchange="loadCities()">
-        <option value="" disabled selected>Select a country</option>
+        <option value="" disabled selected>Pays</option>
     </select>
     @if ($errors->has('pays'))
         <p class="text-sm text-red-600">{{ $errors->first('pays') }}</p>
@@ -56,7 +56,7 @@
 <div class="px-4 py-5 bg-white sm:p-6">
     <label for="ville" class="block font-medium text-sm text-gray-700">VILLE</label>
     <select name="ville" id="ville" class="form-input rounded-md shadow-sm mt-1 block w-full p-2" disabled>
-        <option value="" disabled selected>Select a city</option>
+        <option value="" disabled selected>Ville</option>
     </select>
     @if ($errors->has('ville'))
         <p class="text-sm text-red-600">{{ $errors->first('ville') }}</p>
@@ -73,7 +73,7 @@
 
 var countrySelect = document.querySelector('#pays'),
 citySelect = document.querySelector('#ville')
-
+var countryNameToIso2 = {};
 
 function loadCountries() {
 
@@ -86,8 +86,9 @@ function loadCountries() {
 
         data.forEach(country => {
             const option = document.createElement('option')
-            option.value = country.iso2
+            option.value = country.name 
             option.textContent = country.name 
+            countryNameToIso2[country.name] = country.iso2;
             countrySelect.appendChild(option)
         })
     })
@@ -105,12 +106,12 @@ function loadCountries() {
 function loadCities() {
     citySelect.disabled = false
     citySelect.style.pointerEvents = 'auto'
-
-    const selectedCountryCode = countrySelect.value
     
+    const selectedCountryName = countrySelect.value;
+    const selectedCountryCode = countryNameToIso2[selectedCountryName];
     // console.log(selectedCountryCode, selectedStateCode);
 
-    citySelect.innerHTML = '<option value="">Select City</option>' // Clear existing city options
+    citySelect.innerHTML = '<option value="">Séléctionner votre ville</option>' // Clear existing city options
 
     fetch(`${config.cUrl}/${selectedCountryCode}/cities`, {headers: {"X-CSCAPI-KEY": config.ckey}})
     .then(response => response.json())
@@ -119,7 +120,7 @@ function loadCities() {
 
         data.forEach(city => {
             const option = document.createElement('option')
-            option.value = city.iso2
+            option.value = city.name
             option.textContent = city.name 
             citySelect.appendChild(option)
         })
