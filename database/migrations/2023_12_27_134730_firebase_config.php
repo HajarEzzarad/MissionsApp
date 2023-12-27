@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('FirebaseConfig', function (Blueprint $table) {
+            $table->id();
             $table->string('apiKey');
             $table->string('authDomain');
             $table->string('databaseURL');
@@ -20,6 +21,7 @@ return new class extends Migration
             $table->string('messagingSenderId');
             $table->string('appId');
             $table->string('measurementId');
+            $table->timestamps();
         });
     }
 

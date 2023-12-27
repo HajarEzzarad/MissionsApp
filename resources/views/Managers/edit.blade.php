@@ -98,7 +98,7 @@
                             <label for="password" class="block font-medium text-sm text-gray-700">Password</label>
                             <input type="password" name="password" id="password" class="form-input rounded-md shadow-sm mt-1 block w-full" />
                             @error('password')
-                                <p class="text-sm text-red-600">{{ $message }}</p>
+                                <p class="text-sm text-red-600">{{ $password }}</p>
                             @enderror
                         </div>
                         <div class="flex items-center justify-end px-4 py-3 bg-purple-50 text-right sm:px-6">

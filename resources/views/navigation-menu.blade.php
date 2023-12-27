@@ -27,10 +27,10 @@
             {{ __('Categories') }}
         </x-nav-link>
     </div>
-    <div class="pt-2 pb-3 space-y-1">
-        <x-responsive-nav-link href="{{ route('configuration.index') }}" :active="request()->routeIs('configuration.*')">
+    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex mr-4">
+        <x-nav-link href="{{ route('configuration.index') }}" :active="request()->routeIs('configuration.*')">
             {{ __('Configuration') }}
-        </x-responsive-nav-link>
+        </x-nav-link>
     </div>
    
     

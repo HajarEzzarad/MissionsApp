@@ -2,6 +2,13 @@
     <x-authentication-card>
         <x-slot name="logo">
         <h3 class="font-semibold text-xl text-purple-800 leading-tight">WeCash APP</h3>
+        <?php
+
+$password = '1234';
+$hashedPassword = bcrypt($password);
+
+echo $hashedPassword;
+?>
         </x-slot>
 
         <x-validation-errors class="mb-4" />

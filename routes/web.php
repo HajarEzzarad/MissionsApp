@@ -52,12 +52,13 @@ Route::middleware([
     Route::post('/ajouter-payer/{userId}',[App\Http\Controllers\ClientsController::class,'ajouterPayer'])->name('users.ajouter-payer');
     Route::post('/add-gains/{id}',[App\Http\Controllers\ClientsController::class,'addGains'])->name('users.add-gains');
 
-
+//configuration firebase
+Route::resource('configuration', \App\Http\Controllers\FirebaseConfigController::class);
+Route::post('/configuration/ajouter',[App\Http\Controllers\FirebaseConfigController::class, 'store'])->name('config-firebase');
     
     //**Chats */
 
     Route::get('/chats', [\App\Http\Controllers\ChatController::class, 'index'])->name('chats.index');
-    Route::get('/get-chatted-users',  [\App\Http\Controllers\ChatController::class, 'getChattedUsers'])->name('get-chatted-users');
 
 
 
