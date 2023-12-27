@@ -37,6 +37,7 @@ return new class extends Migration
             $table->json('user_code')->nullable();
             $table->string('code')->unique()->nullable();
             $table->decimal('win_code', 8,2)->nullable();
+            $table->boolean('ValidationDelete')->nullable();
 
 
         });

@@ -50,6 +50,7 @@ class Client extends Authenticatable
         'code',
         'win_code',
         'user_code',
+        'ValidationDelete',
 
 
     ];
