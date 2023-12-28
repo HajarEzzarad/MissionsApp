@@ -32,6 +32,11 @@
             {{ __('Configuration') }}
         </x-nav-link>
     </div>
+    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex mr-4">
+        <x-nav-link href="{{ route('confidentialite.index') }}" :active="request()->routeIs('confidentialite.*')">
+            {{ __('Confidentialite') }}
+        </x-nav-link>
+    </div>
    
     
 </div>
@@ -179,6 +184,11 @@
     <div class="pt-2 pb-3 space-y-1">
         <x-responsive-nav-link href="{{ route('configuration.index') }}" :active="request()->routeIs('configuration.*')">
             {{ __('Configuration') }}
+        </x-responsive-nav-link>
+    </div>
+    <div class="pt-2 pb-3 space-y-1">
+        <x-responsive-nav-link href="{{ route('confidentialite.index') }}" :active="request()->routeIs('confidentialite.*')">
+            {{ __('Confidentialite') }}
         </x-responsive-nav-link>
     </div>
  

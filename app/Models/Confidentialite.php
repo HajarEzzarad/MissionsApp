@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Confidentialite extends Model
 {
     use HasFactory;
+
+    public $table = 'confidentialite';
+    protected $fillable = [
+            'text',
+    ];
 }

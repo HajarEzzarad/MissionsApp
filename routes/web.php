@@ -52,8 +52,10 @@ Route::middleware([
     Route::post('/ajouter-payer/{userId}',[App\Http\Controllers\ClientsController::class,'ajouterPayer'])->name('users.ajouter-payer');
     Route::post('/add-gains/{id}',[App\Http\Controllers\ClientsController::class,'addGains'])->name('users.add-gains');
 
-//configuration firebase
-Route::resource('configuration', \App\Http\Controllers\FirebaseConfigController::class);
+    //configuration firebase
+    Route::resource('configuration', \App\Http\Controllers\FirebaseConfigController::class);
+    //confidentailite
+    Route::resource('confidentialite', \App\Http\Controllers\ConfidentialiteController::class);
     
     //**Chats */
 

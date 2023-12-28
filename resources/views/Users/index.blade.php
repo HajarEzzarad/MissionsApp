@@ -32,9 +32,6 @@
                                         Prénom
                                     </th>
                                     <th scope="col" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Email
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Bnaque
                                     </th>
                                     <th scope="col" width="200" class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -61,9 +58,6 @@
                                             {{ $user->prenom}}
                                         </td>
 
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                            {{ $user->email}}
-                                        </td>
 
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                             {{ $user->NomBanque}}
@@ -98,9 +92,9 @@
                                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                                 <input type="submit" class="text-red-600 hover:text-red-900 mb-2 mr-2" value="Delete">
                                             </form>
-                                            @if ($user->ValidationDelete == 1)
-                    <span class=" p-1 font-semibold bg-red-600 w-4 text-white rounded">Confirmation to Delete</span>
-                @else
+                                            @if($user->ValidationDelete == 1)
+                    <span class=" p-1 font-semibold bg-red-600 w-4 text-white rounded">Confirmation de suppression</span>
+                @endif
                                         </td>
                                     </tr>
                                 @endforeach

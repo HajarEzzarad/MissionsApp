@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('confidentialite', function (Blueprint $table) {
             $table->id();
+            $table->longText('text');
+            $table->timestamps();
         });
     }
 

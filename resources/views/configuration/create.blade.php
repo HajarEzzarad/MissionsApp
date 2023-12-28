@@ -6,7 +6,9 @@
     </x-slot>
     <div>
     <div class="max-w-4xl mx-auto py-10 sm:px-6 lg:px-8">
-<a href="{{ route('configuration.index')}}">retour</a>
+    <div class="block mb-8">
+                <a href="{{ route('configuration.index') }}" class="text-purple font-bold py-2 px-4 rounded"><i class="fas fa-arrow-left"></i>Retour</a>
+            </div>
 @if(session('message'))
                 <div class="bg-green-500 text-white p-4">{{ session('message')}}</div>
                 @endif
