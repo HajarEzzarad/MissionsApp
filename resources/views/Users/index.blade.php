@@ -98,6 +98,9 @@
                                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                                 <input type="submit" class="text-red-600 hover:text-red-900 mb-2 mr-2" value="Delete">
                                             </form>
+                                            @if ($user->ValidationDelete == 1)
+                    <span class=" p-1 font-semibold bg-red-600 w-4 text-white rounded">Confirmation to Delete</span>
+                @else
                                         </td>
                                     </tr>
                                 @endforeach

@@ -22,7 +22,7 @@ class FirebaseConfigController extends Controller
         $request->validate([
             'apiKey' => 'required',
             'authDomain' => 'required',
-            'description' => 'required',
+            'databaseURL' => 'required',
             'projectId' => 'required',
             'storageBocket' => 'required',
             'messagingSenderId' => 'required',

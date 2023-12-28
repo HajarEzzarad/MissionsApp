@@ -54,7 +54,6 @@ Route::middleware([
 
 //configuration firebase
 Route::resource('configuration', \App\Http\Controllers\FirebaseConfigController::class);
-Route::post('/configuration/ajouter',[App\Http\Controllers\FirebaseConfigController::class, 'store'])->name('config-firebase');
     
     //**Chats */
 
